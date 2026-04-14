@@ -1,0 +1,30 @@
+{
+  "name": "rusteze",
+  "version": "1.0.0",
+  "description": "Plataforma de gestión interna diseñada para optimizar el flujo de trabajo en el talleres. Esta aplicación permite asignar reparaciones de forma eficiente entre los trabajadores y centraliza la recopilación y análisis de datos operativos.",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ikeermelero/Rusteze.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/ikeermelero/Rusteze/issues"
+  },
+  "homepage": "https://github.com/ikeermelero/Rusteze#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
