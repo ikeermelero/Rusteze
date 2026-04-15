@@ -18,7 +18,6 @@ const pool = mysql.createPool({
   database: process.env.DB_NAME
 });
 
-
 app.use(express.json()) // ← imprescindible para leer req.body en formato json
 app.use(express.urlencoded()) // ← imprescindible para leer req.body de formularios
 app.use("/", router)
