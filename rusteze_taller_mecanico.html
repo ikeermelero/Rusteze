@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rusteze — Gestión de Taller Mecánico</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --rust: #C0451A;
+      --rust-light: #E8623A;
+      --rust-dark: #8B2F0F;
+      --steel: #3A3F47;
+      --steel-light: #52585F;
+      --oil: #1A1D21;
+      --cream: #F5F0E8;
+      --chrome: #D0D4D9;
+      --yellow-acc: #F5B800;
+      --bg-primary: #ffffff;
+      --bg-secondary: #f5f5f5;
+      --text-primary: #1a1a1a;
+      --text-secondary: #666666;
+      --border: rgba(0,0,0,0.12);
+      --border-md: rgba(0,0,0,0.22);
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg-primary: #1e1e1e;
+        --bg-secondary: #2a2a2a;
+        --text-primary: #f0f0f0;
+        --text-secondary: #999999;
+        --border: rgba(255,255,255,0.1);
+        --border-md: rgba(255,255,255,0.2);
+      }
+    }
+    body { font-family: 'Courier New', monospace; background: var(--bg-secondary); min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 20px; }
+
+    .app { display: flex; flex-direction: column; height: calc(100vh - 40px); min-height: 600px; width: 100%; max-width: 1200px; background: var(--bg-primary); border-radius: var(--radius-lg); border: 0.5px solid var(--border); overflow: hidden; position: relative; }
+
+    .topbar { background: var(--steel); color: #fff; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; height: 52px; flex-shrink: 0; }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width: 30px; height: 30px; }
+    .logo-text { font-size: 18px; font-weight: 700; letter-spacing: 2px; color: var(--yellow-acc); }
+    .logo-sub { font-size: 9px; color: var(--chrome); letter-spacing: 3px; text-transform: uppercase; margin-top: -2px; }
+    .topbar-right { display: flex; align-items: center; gap: 16px; }
+    .status-dot { width: 8px; height: 8px; background: #4CAF50; border-radius: 50%; display: inline-block; }
+    .topbar-user { font-size: 12px; color: var(--chrome); }
+
+    .layout { display: flex; flex: 1; overflow: hidden; }
+
+    .sidebar { width: 180px; background: var(--oil); display: flex; flex-direction: column; padding: 16px 0; flex-shrink: 0; overflow-y: auto; }
+    .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 16px; cursor: pointer; font-size: 12px; color: var(--chrome); letter-spacing: 0.5px; border-left: 3px solid transparent; transition: all 0.15s; user-select: none; }
+    .nav-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+    .nav-item.active { border-left-color: var(--yellow-acc); background: rgba(245,184,0,0.08); color: var(--yellow-acc); }
+    .nav-icon { font-size: 14px; width: 16px; text-align: center; }
+    .nav-sep { height: 0.5px; background: rgba(255,255,255,0.08); margin: 8px 16px; }
+
+    .main { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+    .view { display: none; flex: 1; flex-direction: column; overflow-y: auto; }
+    .view.active { display: flex; }
+
+    .page-header { padding: 20px 24px 0; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .page-title { font-size: 16px; font-weight: 500; color: var(--text-primary); letter-spacing: 1px; text-transform: uppercase; }
+    .page-sub { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+    .btn-primary { background: var(--rust); color: #fff; border: none; border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-family: 'Courier New', monospace; cursor: pointer; letter-spacing: 0.5px; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--rust-light); }
+
+    .kpi-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; padding: 16px 24px; flex-shrink: 0; }
+    .kpi { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px; }
+    .kpi-label { font-size: 10px; color: var(--text-secondary); letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 6px; }
+    .kpi-val { font-size: 22px; font-weight: 500; color: var(--text-primary); }
+    .kpi-delta { font-size: 10px; margin-top: 4px; }
+    .up { color: #4CAF50; } .dn { color: #E53935; }
+
+    .section { padding: 0 24px 20px; flex-shrink: 0; }
+    .section-label { font-size: 10px; letter-spacing: 2px; color: var(--text-secondary); text-transform: uppercase; margin-bottom: 12px; border-bottom: 0.5px solid var(--border); padding-bottom: 6px; }
+
+    .table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .table th { text-align: left; font-size: 10px; letter-spacing: 1px; color: var(--text-secondary); font-weight: 500; padding: 6px 8px; border-bottom: 0.5px solid var(--border); text-transform: uppercase; }
+    .table td { padding: 9px 8px; border-bottom: 0.5px solid var(--border); color: var(--text-primary); vertical-align: middle; }
+    .table tr:last-child td { border-bottom: none; }
+    .table tr:hover td { background: var(--bg-secondary); }
+
+    .badge { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 99px; font-family: 'Courier New', monospace; }
+    .badge-pend { background: rgba(245,184,0,0.15); color: #A07800; }
+    .badge-prog { background: rgba(192,69,26,0.12); color: #C0451A; }
+    .badge-done { background: rgba(76,175,80,0.12); color: #2E7D32; }
+    .badge-wait { background: var(--bg-secondary); color: var(--text-secondary); border: 0.5px solid var(--border); }
+
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; }
+    .form-group label { font-size: 10px; letter-spacing: 1px; color: var(--text-secondary); text-transform: uppercase; }
+    .form-group input, .form-group select, .form-group textarea { font-family: 'Courier New', monospace; font-size: 12px; border-radius: var(--radius-md); border: 0.5px solid var(--border-md); background: var(--bg-primary); color: var(--text-primary); padding: 8px 10px; outline: none; transition: border-color 0.15s; }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--rust); }
+    .form-group textarea { resize: vertical; min-height: 70px; }
+    .form-full { grid-column: 1 / -1; }
+    .form-actions { display: flex; gap: 8px; margin-top: 4px; }
+    .btn-ghost { background: transparent; border: 0.5px solid var(--border-md); color: var(--text-secondary); border-radius: var(--radius-md); padding: 8px 16px; font-size: 12px; font-family: 'Courier New', monospace; cursor: pointer; transition: background 0.15s; }
+    .btn-ghost:hover { background: var(--bg-secondary); }
+
+    .progress-bar { height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--rust); border-radius: 2px; }
+
+    .client-card { background: var(--bg-secondary); border-radius: var(--radius-md); padding: 14px; display: flex; align-items: center; gap: 12px; margin-bottom: 8px; cursor: pointer; border: 0.5px solid var(--border); transition: border-color 0.15s; }
+    .client-card:hover { border-color: var(--border-md); }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; background: var(--steel); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 500; color: var(--yellow-acc); flex-shrink: 0; }
+    .client-info { flex: 1; }
+    .client-name { font-size: 13px; font-weight: 500; color: var(--text-primary); }
+    .client-meta { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+
+    .stock-item { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 0.5px solid var(--border); }
+    .stock-item:last-child { border-bottom: none; }
+    .stock-name { flex: 1; font-size: 12px; color: var(--text-primary); }
+    .stock-qty { font-size: 13px; font-weight: 500; min-width: 40px; text-align: right; }
+    .stock-low { color: #E53935; }
+    .stock-ok { color: var(--text-secondary); }
+
+    .toast { position: absolute; top: 16px; right: 16px; background: var(--steel); color: #fff; font-size: 12px; padding: 10px 16px; border-radius: var(--radius-md); border-left: 3px solid var(--yellow-acc); opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100; }
+    .toast.show { opacity: 1; }
+
+    .search-bar { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+    .search-bar input { flex: 1; font-family: 'Courier New', monospace; font-size: 12px; border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 7px 12px; background: var(--bg-secondary); color: var(--text-primary); outline: none; }
+    .filter-select { font-family: 'Courier New', monospace; font-size: 12px; border: 0.5px solid var(--border); border-radius: var(--radius-md); padding: 7px 10px; background: var(--bg-secondary); color: var(--text-primary); outline: none; }
+
+    @media (max-width: 700px) {
+      .kpi-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .sidebar { width: 140px; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-full { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="toast" id="toast"></div>
+
+  <div class="topbar">
+    <div class="logo">
+      <svg class="logo-icon" viewBox="0 0 30 30" fill="none">
+        <circle cx="15" cy="15" r="14" fill="#C0451A"/>
+        <path d="M8 15 Q11 10 15 15 Q19 20 22 15" stroke="#F5B800" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <circle cx="15" cy="15" r="3" fill="#F5B800"/>
+        <path d="M15 4 L15 8 M15 22 L15 26 M4 15 L8 15 M22 15 L26 15" stroke="#F5B800" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <div class="logo-text">RUSTEZE</div>
+        <div class="logo-sub">Taller Pro</div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <span class="status-dot"></span>
+      <span class="topbar-user">Mecánico Jefe</span>
+    </div>
+  </div>
+
+  <div class="layout">
+    <div class="sidebar">
+      <div class="nav-item active" onclick="switchView('dashboard', this)"><span class="nav-icon">▣</span> Dashboard</div>
+      <div class="nav-item" onclick="switchView('ordenes', this)"><span class="nav-icon">⚙</span> Órdenes</div>
+      <div class="nav-item" onclick="switchView('nueva', this)"><span class="nav-icon">+</span> Nueva OT</div>
+      <div class="nav-sep"></div>
+      <div class="nav-item" onclick="switchView('clientes', this)"><span class="nav-icon">◎</span> Clientes</div>
+      <div class="nav-item" onclick="switchView('inventario', this)"><span class="nav-icon">≡</span> Inventario</div>
+      <div class="nav-sep"></div>
+      <div class="nav-item" onclick="switchView('reportes', this)"><span class="nav-icon">◈</span> Reportes</div>
+    </div>
+
+    <div class="main">
+
+      <!-- DASHBOARD -->
+      <div class="view active" id="v-dashboard">
+        <div class="page-header">
+          <div><div class="page-title">Panel General</div><div class="page-sub">Resumen operativo del día</div></div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-label">OT Activas</div><div class="kpi-val">12</div><div class="kpi-delta up">▲ 3 vs ayer</div></div>
+          <div class="kpi"><div class="kpi-label">Completadas</div><div class="kpi-val">47</div><div class="kpi-delta up">▲ este mes</div></div>
+          <div class="kpi"><div class="kpi-label">Facturado</div><div class="kpi-val">8.4k€</div><div class="kpi-delta up">▲ 12%</div></div>
+          <div class="kpi"><div class="kpi-label">Pendientes</div><div class="kpi-val">5</div><div class="kpi-delta dn">▼ revisar</div></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Órdenes Recientes</div>
+          <table class="table">
+            <thead><tr><th>N° OT</th><th>Vehículo</th><th>Cliente</th><th>Mecánico</th><th>Estado</th><th>Progreso</th></tr></thead>
+            <tbody>
+              <tr><td>#0047</td><td>Ford Focus 2019</td><td>Carlos M.</td><td>Juanjo</td><td><span class="badge badge-prog">En proceso</span></td><td><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:65%"></div></div></td></tr>
+              <tr><td>#0046</td><td>Seat Ibiza 2021</td><td>Laura G.</td><td>Marcos</td><td><span class="badge badge-pend">Esperando</span></td><td><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:20%"></div></div></td></tr>
+              <tr><td>#0045</td><td>VW Golf 2018</td><td>Ainhoa T.</td><td>Juanjo</td><td><span class="badge badge-done">Completada</span></td><td><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:100%"></div></div></td></tr>
+              <tr><td>#0044</td><td>Renault Clio 2020</td><td>Iker B.</td><td>Saioa</td><td><span class="badge badge-wait">Presupuesto</span></td><td><div class="progress-bar" style="width:120px"><div class="progress-fill" style="width:5%"></div></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="section">
+          <div class="section-label">Stock Crítico</div>
+          <div class="stock-item"><span class="stock-name">Filtro de aceite Bosch OF3000</span><span class="stock-qty stock-low">2 uds</span></div>
+          <div class="stock-item"><span class="stock-name">Pastillas freno Brembo P85020</span><span class="stock-qty stock-low">3 uds</span></div>
+          <div class="stock-item"><span class="stock-name">Aceite Motul 5W40 5L</span><span class="stock-qty stock-ok">18 uds</span></div>
+        </div>
+      </div>
+
+      <!-- ÓRDENES -->
+      <div class="view" id="v-ordenes">
+        <div class="page-header">
+          <div><div class="page-title">Órdenes de Trabajo</div><div class="page-sub">Gestión completa de OT</div></div>
+        </div>
+        <div class="section" style="padding-top:16px;">
+          <div class="search-bar">
+            <input type="text" placeholder="Buscar por matrícula, cliente, OT...">
+            <select class="filter-select"><option>Todos</option><option>En proceso</option><option>Pendiente</option><option>Completada</option></select>
+          </div>
+          <table class="table">
+            <thead><tr><th>OT</th><th>Fecha</th><th>Vehículo</th><th>Cliente</th><th>Avería</th><th>Mecánico</th><th>Estado</th><th>Total</th></tr></thead>
+            <tbody>
+              <tr><td>#0047</td><td>15/04</td><td>Ford Focus<br><span style="font-size:10px;color:var(--text-secondary)">1234-BKZ</span></td><td>Carlos M.</td><td>Cambio aceite + filtros</td><td>Juanjo</td><td><span class="badge badge-prog">En proceso</span></td><td>180€</td></tr>
+              <tr><td>#0046</td><td>15/04</td><td>Seat Ibiza<br><span style="font-size:10px;color:var(--text-secondary)">5678-MNP</span></td><td>Laura G.</td><td>Revisión frenos</td><td>Marcos</td><td><span class="badge badge-pend">Esperando</span></td><td>320€</td></tr>
+              <tr><td>#0045</td><td>14/04</td><td>VW Golf<br><span style="font-size:10px;color:var(--text-secondary)">9012-RTX</span></td><td>Ainhoa T.</td><td>Diagnóstico OBD + avería</td><td>Juanjo</td><td><span class="badge badge-done">Completada</span></td><td>540€</td></tr>
+              <tr><td>#0044</td><td>14/04</td><td>Renault Clio<br><span style="font-size:10px;color:var(--text-secondary)">3456-VWQ</span></td><td>Iker B.</td><td>Embrague completo</td><td>Saioa</td><td><span class="badge badge-wait">Presupuesto</span></td><td>890€</td></tr>
+              <tr><td>#0043</td><td>13/04</td><td>BMW 320d<br><span style="font-size:10px;color:var(--text-secondary)">7890-JKL</span></td><td>Miren A.</td><td>Correa distribución</td><td>Marcos</td><td><span class="badge badge-done">Completada</span></td><td>750€</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- NUEVA OT -->
+      <div class="view" id="v-nueva">
+        <div class="page-header">
+          <div><div class="page-title">Nueva Orden de Trabajo</div><div class="page-sub">Registro de vehículo y avería</div></div>
+        </div>
+        <div class="section" style="padding-top:16px;">
+          <div class="section-label">Datos del vehículo</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Matrícula</label><input type="text" placeholder="1234-ABC"></div>
+            <div class="form-group"><label>Marca / Modelo</label><input type="text" placeholder="Ford Focus"></div>
+            <div class="form-group"><label>Año</label><input type="text" placeholder="2019"></div>
+            <div class="form-group"><label>Kilometraje</label><input type="text" placeholder="85.000 km"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Cliente</div>
+          <div class="form-grid">
+            <div class="form-group"><label>Nombre</label><input type="text" placeholder="Nombre apellidos"></div>
+            <div class="form-group"><label>Teléfono</label><input type="text" placeholder="+34 600 000 000"></div>
+            <div class="form-group form-full"><label>Email</label><input type="text" placeholder="cliente@email.com"></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Diagnóstico y trabajo</div>
+          <div class="form-grid">
+            <div class="form-group form-full"><label>Avería / Síntoma</label><textarea placeholder="Descripción del problema reportado por el cliente..."></textarea></div>
+            <div class="form-group form-full"><label>Trabajo a realizar</label><textarea placeholder="Operaciones que realizará el mecánico..."></textarea></div>
+            <div class="form-group"><label>Mecánico asignado</label>
+              <select><option>Juanjo</option><option>Marcos</option><option>Saioa</option></select>
+            </div>
+            <div class="form-group"><label>Prioridad</label>
+              <select><option>Normal</option><option>Urgente</option><option>Programada</option></select>
+            </div>
+          </div>
+          <div class="form-actions" style="margin-top:12px;">
+            <button class="btn-primary" onclick="showToast('OT #0048 creada y asignada')">Crear Orden de Trabajo</button>
+            <button class="btn-ghost">Cancelar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLIENTES -->
+      <div class="view" id="v-clientes">
+        <div class="page-header">
+          <div><div class="page-title">Clientes</div><div class="page-sub">Base de datos de clientes</div></div>
+          <button class="btn-primary" onclick="showToast('Formulario de nuevo cliente')">+ Nuevo</button>
+        </div>
+        <div class="section" style="padding-top:16px;">
+          <div class="search-bar"><input type="text" placeholder="Buscar cliente o vehículo..."></div>
+          <div class="client-card"><div class="avatar">CM</div><div class="client-info"><div class="client-name">Carlos Martínez</div><div class="client-meta">Ford Focus 1234-BKZ · 3 visitas · Última: 15/04</div></div><span class="badge badge-prog">Activo</span></div>
+          <div class="client-card"><div class="avatar">LG</div><div class="client-info"><div class="client-name">Laura García</div><div class="client-meta">Seat Ibiza 5678-MNP · 1 visita · Última: 15/04</div></div><span class="badge badge-pend">OT abierta</span></div>
+          <div class="client-card"><div class="avatar">AT</div><div class="client-info"><div class="client-name">Ainhoa Torres</div><div class="client-meta">VW Golf 9012-RTX · 7 visitas · Última: 14/04</div></div><span class="badge badge-done">Historial</span></div>
+          <div class="client-card"><div class="avatar">IB</div><div class="client-info"><div class="client-name">Iker Basurto</div><div class="client-meta">Renault Clio 3456-VWQ · 2 visitas · Última: 14/04</div></div><span class="badge badge-wait">Presupuesto</span></div>
+          <div class="client-card"><div class="avatar">MA</div><div class="client-info"><div class="client-name">Miren Aguirre</div><div class="client-meta">BMW 320d 7890-JKL · 5 visitas · Última: 13/04</div></div><span class="badge badge-done">Historial</span></div>
+        </div>
+      </div>
+
+      <!-- INVENTARIO -->
+      <div class="view" id="v-inventario">
+        <div class="page-header">
+          <div><div class="page-title">Inventario</div><div class="page-sub">Control de piezas y materiales</div></div>
+          <button class="btn-primary" onclick="showToast('Añadiendo nueva pieza')">+ Añadir</button>
+        </div>
+        <div class="section" style="padding-top:16px;">
+          <div class="search-bar"><input type="text" placeholder="Buscar referencia, nombre..."></div>
+          <table class="table">
+            <thead><tr><th>Ref.</th><th>Descripción</th><th>Categoría</th><th>Stock</th><th>Mínimo</th><th>PVP</th><th>Estado</th></tr></thead>
+            <tbody>
+              <tr><td>OF3000</td><td>Filtro aceite Bosch</td><td>Filtros</td><td style="color:#E53935;font-weight:500">2</td><td>5</td><td>8.50€</td><td><span class="badge badge-prog">Stock bajo</span></td></tr>
+              <tr><td>P85020</td><td>Pastillas freno Brembo</td><td>Frenos</td><td style="color:#E53935;font-weight:500">3</td><td>4</td><td>45.00€</td><td><span class="badge badge-prog">Stock bajo</span></td></tr>
+              <tr><td>M5W40</td><td>Aceite Motul 5W40 5L</td><td>Lubricantes</td><td>18</td><td>10</td><td>32.00€</td><td><span class="badge badge-done">OK</span></td></tr>
+              <tr><td>CA-001</td><td>Correa alternador Gates</td><td>Transmisión</td><td>6</td><td>3</td><td>22.00€</td><td><span class="badge badge-done">OK</span></td></tr>
+              <tr><td>BU-F01</td><td>Bujías NGK Premium x4</td><td>Encendido</td><td>12</td><td>8</td><td>28.00€</td><td><span class="badge badge-done">OK</span></td></tr>
+              <tr><td>AM-100</td><td>Amortiguador Sachs delant.</td><td>Suspensión</td><td style="color:#E53935;font-weight:500">1</td><td>2</td><td>89.00€</td><td><span class="badge badge-prog">Stock bajo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- REPORTES -->
+      <div class="view" id="v-reportes">
+        <div class="page-header">
+          <div><div class="page-title">Reportes</div><div class="page-sub">Análisis del taller — Abril 2026</div></div>
+        </div>
+        <div class="kpi-row" style="padding-top:16px;">
+          <div class="kpi"><div class="kpi-label">Ingresos mes</div><div class="kpi-val">8.400€</div><div class="kpi-delta up">▲ 12% vs marzo</div></div>
+          <div class="kpi"><div class="kpi-label">OT completadas</div><div class="kpi-val">47</div><div class="kpi-delta up">▲ 8 vs marzo</div></div>
+          <div class="kpi"><div class="kpi-label">Ticket medio</div><div class="kpi-val">178€</div><div class="kpi-delta dn">▼ 3% vs marzo</div></div>
+          <div class="kpi"><div class="kpi-label">Clientes nuevos</div><div class="kpi-val">9</div><div class="kpi-delta up">▲ 2 vs marzo</div></div>
+        </div>
+        <div class="section">
+          <div class="section-label">Servicios más realizados</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-primary)"><span>Cambio aceite y filtros</span><span style="color:var(--text-secondary)">18 OT</span></div><div class="progress-bar"><div class="progress-fill" style="width:80%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-primary)"><span>Revisión frenos</span><span style="color:var(--text-secondary)">11 OT</span></div><div class="progress-bar"><div class="progress-fill" style="width:49%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-primary)"><span>Diagnóstico electrónico</span><span style="color:var(--text-secondary)">9 OT</span></div><div class="progress-bar"><div class="progress-fill" style="width:40%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-primary)"><span>Distribución / embrague</span><span style="color:var(--text-secondary)">5 OT</span></div><div class="progress-bar"><div class="progress-fill" style="width:22%"></div></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--text-primary)"><span>Otros</span><span style="color:var(--text-secondary)">4 OT</span></div><div class="progress-bar"><div class="progress-fill" style="width:18%"></div></div></div>
+          </div>
+        </div>
+        <div class="section">
+          <div class="section-label">Rendimiento por mecánico</div>
+          <table class="table">
+            <thead><tr><th>Mecánico</th><th>OT completadas</th><th>Horas trabajadas</th><th>Ingresos generados</th></tr></thead>
+            <tbody>
+              <tr><td>Juanjo</td><td>19</td><td>112h</td><td>3.200€</td></tr>
+              <tr><td>Marcos</td><td>16</td><td>98h</td><td>2.900€</td></tr>
+              <tr><td>Saioa</td><td>12</td><td>84h</td><td>2.300€</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchView(id, el) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById('v-' + id).classList.add('active');
+    el.classList.add('active');
+  }
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = '✓ ' + msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+</script>
+</body>
+</html>
