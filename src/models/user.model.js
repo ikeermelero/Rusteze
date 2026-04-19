@@ -4,39 +4,52 @@ import sequelize from "../config/db.js";
 const User = sequelize.define(
   "User",
   {
-    id: {
+    ID_USER: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    ID_ROLE: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
+    ID_TALLER: {
+      type: DataTypes.INTEGER,
+    },
+    NAME: {
+      type: DataTypes.STRING(100),
+    },
+    SURNAME: {
+      type: DataTypes.STRING(100),
+    },
+    EMAIL: {
+      type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true, // Sequelize valida el formato automáticamente
-      },
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    PASSWORD_HASH: {
+      type: DataTypes.STRING(255),
     },
-    rol: {
-      type: DataTypes.ENUM("user", "admin"),
-      defaultValue: "user",
+    PHONE: {
+      type: DataTypes.STRING(20),
     },
-    activo: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    CREATED_AT: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "user", // nombre real de la tabla en la base de datos
-    timestamps: true, // añade automáticamente createdAt y updatedAt
+    tableName: "USERS",
+    timestamps: false,
   },
 );
-export default User;
+
+User.associate = (models) => {
+  User.belongsTo(models.Role, { foreignKey: "ID_ROLE" });
+  User.belongsTo(models.Taller, { foreignKey: "ID_TALLER" });
+  User.hasMany(models.Car, { foreignKey: "ID_USER" });
+  User.hasMany(models.Reservation, { foreignKey: "ID_USER" });
+  User.hasMany(models.Task, { foreignKey: "ID_USER", as: "AssignedTasks" });
+};
+
+return User;
