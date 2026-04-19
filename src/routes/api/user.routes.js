@@ -1,15 +1,10 @@
 import { Router } from "express";
-
+import userController from "../../controller/api/user.controller.js";
 const router = Router();
 
-const users = ["Frank", "Iker", "Jefferson", "Marcos"];
+router.get("/:id",userController.getAllUsersByGarageId);
 
-/* router.get("/", (req, res) => {
-  res.status(200).send(console.log(users));
-});
- */
 
-//CRUD de usuarios
 
 /* router.get("/:id", (req, res) => {
     /* const id = req.params.id
