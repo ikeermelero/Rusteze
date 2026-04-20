@@ -4,39 +4,45 @@ import sequelize from "../config/db.js";
 const User = sequelize.define(
   "User",
   {
-    id: {
+    id_user: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    id_role: {
+      type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    id_taller: {
+      type: DataTypes.INTEGER,
+    },
+    name: {
+      type: DataTypes.STRING(100),
+    },
+    surname: {
+      type: DataTypes.STRING(100),
     },
     email: {
-      type: DataTypes.STRING,
+      type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
-      validate: {
-        isEmail: true, // Sequelize valida el formato automáticamente
-      },
     },
-    password: {
-      type: DataTypes.STRING,
-      allowNull: false,
+    password_hash: {
+      type: DataTypes.STRING(255),
     },
-    rol: {
-      type: DataTypes.ENUM("user", "admin"),
-      defaultValue: "user",
+    phone: {
+      type: DataTypes.STRING(20),
     },
-    activo: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: true,
+    created_at: {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "user", // nombre real de la tabla en la base de datos
-    timestamps: true, // añade automáticamente createdAt y updatedAt
+    tableName: "users",
+    timestamps: false,
   },
 );
+
+
 export default User;

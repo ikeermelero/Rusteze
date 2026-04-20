@@ -13,6 +13,9 @@ const HOST = process.env.HOST || 'localhost'
 app.use(express.json()) // ← imprescindible para leer req.body en formato json
 app.use(express.urlencoded()) // ← imprescindible para leer req.body de formularios
 app.use("/", router)
+app.set('views', './src/views')
+app.set('view engine', 'pug')
+//app.set("view engine", pug );
 app.get("/",(req,res)=>{
     res.send("hello world");
 })

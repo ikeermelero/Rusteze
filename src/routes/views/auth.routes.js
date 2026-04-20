@@ -1,0 +1,1 @@
+import userController from '../../controller/view/user.controller.js'

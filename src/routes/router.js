@@ -8,7 +8,7 @@ router.get('/', (req, res) => {
     res.status(200).send("Hola mundo")
 });
 router.use('/api', apiRoutes)
-router.use('/views', viewsRoutes)
+router.use('/', viewsRoutes)
 
 
 export default router
