@@ -1,8 +1,10 @@
 import { Router } from "express";
-import userController from "../../controller/api/user.controller.js";
+import userController from "../../controller/view/user.controller.js";
 const router = Router();
 
-//router.get("/:id/clientes", userController.getAllUsersByGarageId);
+router.get("/:id/clientes", userController.getAllUsersByGarageId);
+
+
 
 
 /* router.get("/:id", (req, res) => 
