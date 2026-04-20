@@ -2,48 +2,43 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
 const Repair = sequelize.define(
-  "Repair",
+  "Repairs",
   {
-    ID_REPAIR: {
+    id_repair: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    ID_CAR: {
+    id_car: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    STATUS: {
+    status: {
       type: DataTypes.STRING(50),
     },
-    DIAGNOSIS: {
+    diagnosis: {
       type: DataTypes.TEXT,
     },
-    TOTAL_COST: {
+    total_cost: {
       type: DataTypes.DECIMAL(12, 2),
       defaultValue: 0.0,
     },
-    START_DATE: {
+    state_dates: {
       type: DataTypes.DATEONLY,
     },
-    END_DATE: {
+    end_date: {
       type: DataTypes.DATEONLY,
     },
-    CREATED_AT: {
+    created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "REPAIRS",
+    tableName: "repairs",
     timestamps: false,
   },
 );
 
-Repair.associate = (models) => {
-  Repair.belongsTo(models.Car, { foreignKey: "ID_CAR" });
-  Repair.hasMany(models.Task, { foreignKey: "ID_REPAIR" });
-  Repair.hasOne(models.Invoice, { foreignKey: "ID_REPAIR" });
-};
 
-return Repair;
+export default Repair;

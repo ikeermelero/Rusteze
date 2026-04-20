@@ -1,42 +1,37 @@
-const { DataTypes } = require('sequelize');
-
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
   const Car = sequelize.define('Car', {
-    ID_CAR: {
+    id_car: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    ID_USER: {
+    id_user: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    BRAND: {
+    brand: {
       type: DataTypes.STRING(50),
     },
-    MODEL: {
+    model: {
       type: DataTypes.STRING(50),
     },
-    PLATE: {
+    plate: {
       type: DataTypes.STRING(20),
       allowNull: false,
       unique: true,
     },
-    COLOR: {
+    color: {
       type: DataTypes.STRING(30),
     },
-    YEAR: {
+    year: {
       type: DataTypes.INTEGER,
     },
   }, {
-    tableName: 'CARS',
+    tableName: 'cars',
     timestamps: false,
   });
 
-  Car.associate = (models) => {
-    Car.belongsTo(models.User, { foreignKey: 'ID_USER' });
-    Car.hasMany(models.Reservation, { foreignKey: 'ID_CAR' });
-    Car.hasMany(models.Repair,      { foreignKey: 'ID_CAR' });
-  };
 
-  return Car;
+export default Car;

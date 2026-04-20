@@ -4,52 +4,45 @@ import sequelize from "../config/db.js";
 const User = sequelize.define(
   "User",
   {
-    ID_USER: {
+    id_user: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    ID_ROLE: {
+    id_role: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_TALLER: {
+    id_taller: {
       type: DataTypes.INTEGER,
     },
-    NAME: {
+    name: {
       type: DataTypes.STRING(100),
     },
-    SURNAME: {
+    surname: {
       type: DataTypes.STRING(100),
     },
-    EMAIL: {
+    email: {
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true,
     },
-    PASSWORD_HASH: {
+    password_hash: {
       type: DataTypes.STRING(255),
     },
-    PHONE: {
+    phone: {
       type: DataTypes.STRING(20),
     },
-    CREATED_AT: {
+    created_at: {
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
   },
   {
-    tableName: "USERS",
+    tableName: "users",
     timestamps: false,
   },
 );
 
-User.associate = (models) => {
-  User.belongsTo(models.Role, { foreignKey: "ID_ROLE" });
-  User.belongsTo(models.Taller, { foreignKey: "ID_TALLER" });
-  User.hasMany(models.Car, { foreignKey: "ID_USER" });
-  User.hasMany(models.Reservation, { foreignKey: "ID_USER" });
-  User.hasMany(models.Task, { foreignKey: "ID_USER", as: "AssignedTasks" });
-};
 
-return User;
+export default User;

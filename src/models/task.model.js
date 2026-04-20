@@ -2,41 +2,37 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
   const Task = sequelize.define('Task', {
-    ID_TAREAS: {
+   id_tareas: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    ID_REPAIR: {
+   id_repair: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    ID_USER: {
+    id_user: {
       type: DataTypes.INTEGER, // Mecánico asignado
     },
-    NAME: {
+    name: {
       type: DataTypes.STRING(100),
     },
-    DESCRIPTION: {
+    description: {
       type: DataTypes.TEXT,
     },
-    STATUS: {
+    status: {
       type: DataTypes.STRING(50),
     },
-    ESTIMATED_TIME: {
+    estimated_time: {
       type: DataTypes.INTEGER,
     },
-    COST: {
+    cost: {
       type: DataTypes.DECIMAL(12, 2),
     },
   }, {
-    tableName: 'TASKS',
+    tableName: 'tasks',
     timestamps: false,
   });
 
-  Task.associate = (models) => {
-    Task.belongsTo(models.Repair, { foreignKey: 'ID_REPAIR' });
-    Task.belongsTo(models.User,   { foreignKey: 'ID_USER', as: 'Mechanic' });
-  };
 
-  return Task;
+export default Task;

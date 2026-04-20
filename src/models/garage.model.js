@@ -1,36 +1,33 @@
 import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
-const Taller = sequelize.define(
-  "Taller",
+const Garage = sequelize.define(
+  "Talleres",
   {
-    ID_TALLER: {
+    id_taller: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-    ADDRESS: {
+    address: {
       type: DataTypes.STRING(255),
     },
-    CITY: {
+    city: {
       type: DataTypes.STRING(100),
     },
-    PHONE: {
+    phone: {
       type: DataTypes.STRING(20),
     },
-    GMAIL: {
+    gmail: {
       type: DataTypes.STRING(100),
     },
   },
   {
-    tableName: "TALLERES",
+    tableName: "talleres",
     timestamps: false,
   },
 );
 
-Taller.associate = (models) => {
-  Taller.hasMany(models.User, { foreignKey: "ID_TALLER" });
-  Taller.hasMany(models.Reservation, { foreignKey: "ID_TALLER" });
-};
 
-return Taller;
+
+export default Garage;
