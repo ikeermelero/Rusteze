@@ -1,41 +1,37 @@
-extends index
+extends layout
 
 block content
   .auth-container
-    
-header.auth-header
-    block header-text
-        if mode == 'login'
-        h2 Panel de Control
-        p Introduce tus credenciales de mecánico
-    else if mode == 'register'
-        h2 Nuevo Recluta
-        p Únete al equipo de boxes de Rust-eze
-    else if mode == 'forgot'
-        h2 ¿Problemas en el motor?
-        p Introduce tu correo para enviarte una grúa de recuperación
+    header.auth-header
+      block header-text
+      if mode == 'login'
+        h2.auth-title Panel de Control
+        p.auth-subtitle Introduce tus credenciales de mecánico
+      else if mode == 'register'
+        h2.auth-title Nuevo Recluta
+        p.auth-subtitle Únete al equipo de boxes de Rust-eze
+      else if mode == 'forgot'
+        h2.auth-title ¿Problemas en el motor?
+        p.auth-subtitle Introduce tu correo para enviarte una grúa de recuperación
 
     .auth-body
-      
-    if mode == 'login'
+      if mode == 'login'
         form#loginForm(action="/views/login" method="POST")
-        .input-group
+          .input-group
             label(for="email") Correo Electrónico
             input#email(type="email" name="email" required placeholder="rayo@mcqueen.com")
-        .input-group
+          .input-group
             label(for="password") Contraseña
             input#password(type="password" name="password_hash" required placeholder="••••••••")
-        button.btn-primary(type="submit") Encender Motores
-          
-        .form-options
+          button.btn-primary(type="submit") Encender Motores
+          .form-options
             p ¿Nuevo? 
-            a(href="/views/registro") Regístrate
+              a(href="/auth/register") Regístrate
             p
-              a(href="/views/recuperar") ¿Olvidaste la clave?
+              a(href="/auth/forgot") ¿Olvidaste la clave?
 
-      
       else if mode == 'register'
-        form#registerForm(action="/auth/register" method="POST")
+        form#registerForm(action="/views/register" method="POST")
           .input-group
             label(for="name") Nombre
             input#name(type="text" name="name" required placeholder="Ej. Rayo")
@@ -48,24 +44,22 @@ header.auth-header
           .input-group
             label(for="password") Contraseña
             input#password(type="password" name="password_hash" required placeholder="Mínimo 8 caracteres")
+            label(for="passwordRepeat") Repetir Contraseña
+            input#passwordRepeat(type="password" name="passwordRepeat" required placeholder="Mínimo 8 caracteres")
           button.btn-primary(type="submit") Unirse a la Escudería
-          
           .form-options
             p
-              a(href="/views/login") Ya tengo cuenta, volver al garage
-
+              a(href="/auth/login") Ya tengo cuenta, volver al garage
       
       else if mode == 'forgot'
-        form#forgotForm(action="/auth/forgot" method="POST")
+        form#forgotForm(action="/views/forgot" method="POST")
           .input-group
             label(for="email") Tu Correo de Mecánico
             input#email(type="email" name="email" required placeholder="mecanico@rusteze.com")
           button.btn-primary(type="submit") Enviar Auxilio Vial
-          
           .form-options
             p
-              a(href="/views/login") Volver al Garage y reintentar logueo
+              a(href="/auth/login") Volver al Garage y reintentar logueo
 
-      
-      if error
-        p.error-message= error
+    if error
+      p.error-message= error
