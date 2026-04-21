@@ -1,28 +1,20 @@
-import { Repair, Car } from "../../models/index.js";
-
-const getParsedId = (id) => parseInt(id);
+import repairService from "../../services/repair.service.js";
 
 async function getAllRepairs(req, res) {
-    const repairs = await Repair.findAll({
-        include: [{ model: Car }]
-    });
+    const repairs = await repairService.findAllRepairs();
     res.render('repairs', { repairs });
 
 }
 
 async function getRepairById(req, res) {
-    const id = getParsedId(req.params.id);
-
-    const repair = await Repair.findByPk(id, {
-        include: [{ model: Car }]
-    });
+    const id = parseInt(req.params.id);
+    const repair = await repairService.findRepairById(id);
     res.render('repairDetail', { repair });
 }
 
 
 
-export const functions = {
+export default {
     getAllRepairs,
-    getRepairById,
-    createRepair
-}
+    getRepairById
+};
