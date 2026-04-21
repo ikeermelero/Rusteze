@@ -1,58 +1,28 @@
-<<<<<<< HEAD
-doctype html
-html
-  head
-    title Login - Rusteze
-  body
-    h1 Bienvenido a Rusteze
-    
-    if error
-      p(style="color: red")= error
-
-    h2 Iniciar Sesión
-    form(action="/api/user/login" method="POST")
-      div
-        label Email:
-        input(type="email" name="email" required)
-      div
-        label Contraseña:
-        input(type="password" name="password" required)
-      button(type="submit") Entrar
-
-    hr
-
-    h2 Registro
-    form(action="/api/user/register" method="POST")
-      div
-        label Nombre:
-        input(type="text" name="name" required)
-      div
-        label Email:
-        input(type="email" name="email" required)
-      div
-        label Contraseña:
-        input(type="password" name="password" required)
-      //- Importante: id_role (2 para empleado, por ejemplo)
-      input(type="hidden" name="id_role" value="2") 
-      button(type="submit") Registrarse
-=======
 extends layout
 
 block content
   .container.py-5
     .row.justify-content-center.g-4
 
-      // LOGIN
+      //- ==========================================
+      //- SECCIÓN DE INICIO DE SESIÓN (LOGIN)
+      //- ==========================================
       .col-md-6.col-lg-5
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
             h2.text-center.mb-4 Iniciar Sesión
 
+            //- Muestra errores si el controlador envía alguno (ej: "Contraseña incorrecta")
             if error
               .alert.alert-danger(role="alert")
                 = error
+            
+            //- Mensaje de éxito si viene de un registro reciente
+            if typeof success !== 'undefined'
+              .alert.alert-success(role="alert")
+                | ¡Registro completado! Ya puedes iniciar sesión.
 
-            form(action="/login" method="POST")
+            form(action="/auth/login" method="POST")
               .mb-3
                 label.form-label(for="email") Email
                 input#email.form-control(
@@ -74,19 +44,31 @@ block content
               .d-grid
                 button.btn.btn-primary(type="submit") Entrar
 
-      // REGISTRO
+      //- ==========================================
+      //- SECCIÓN DE REGISTRO DE USUARIO
+      //- ==========================================
       .col-md-6.col-lg-7
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
             h2.text-center.mb-4 Registro de Usuario
 
-            form(action="/register" method="POST")
+            form(action="/auth/register" method="POST")
               .row
                 .col-md-6.mb-3
                   label.form-label(for="name") Nombre
                   input#name.form-control(
                     type="text"
                     name="name"
+                    placeholder="Tu nombre"
+                    required
+                  )
+                
+                .col-md-6.mb-3
+                  label.form-label(for="surname") Apellido
+                  input#surname.form-control(
+                    type="text"
+                    name="surname"
+                    placeholder="Tu apellido"
                     required
                   )
 
@@ -95,39 +77,31 @@ block content
                   input#registerEmail.form-control(
                     type="email"
                     name="email"
+                    placeholder="correo@ejemplo.com"
                     required
                   )
 
                 .col-md-6.mb-3
-                  label.form-label(for="phone") Teléfono (opcional)
+                  label.form-label(for="phone") Teléfono
                   input#phone.form-control(
                     type="text"
                     name="phone"
+                    placeholder="Ej: 123456789"
                   )
 
-                .col-md-6.mb-3
-                  label.form-label(for="dateOfBirth") Fecha de nacimiento
-                  input#dateOfBirth.form-control(
-                    type="date"
-                    name="dateOfBirth"
-                  )
-
-                .col-md-6.mb-3
+                .col-md-12.mb-3
                   label.form-label(for="registerPassword") Contraseña
+                  //- name="password_hash" para que el controlador lo reciba directo
                   input#registerPassword.form-control(
                     type="password"
-                    name="password"
+                    name="password_hash"
+                    placeholder="Crea una contraseña segura"
                     required
                   )
 
-                .col-md-6.mb-3
-                  label.form-label(for="passwordRepeat") Repetir Contraseña
-                  input#passwordRepeat.form-control(
-                    type="password"
-                    name="passwordRepeat"
-                    required
-                  )
+                //- Campos ocultos para completar el modelo User
+                input(type="hidden" name="id_role" value="2")
+                input(type="hidden" name="id_taller" value="1")
 
               .d-grid.mt-3
-                button.btn.btn-success(type="submit") Registrarse
->>>>>>> 986edb4deed73738b755a2de0495e9ea362652af
+                button.btn.btn-success(type="submit") Crear Cuenta

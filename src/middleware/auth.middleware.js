@@ -1,80 +1,120 @@
 import authService from "../services/auth.service.js";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 
+/**
+ * Valida los datos del formulario de registro antes de crear al usuario.
+ */
 async function isRegisterDataCorrect(req, res, next) {
-    const { name, email, phone, password, passwordRepeat, dateOfBirth } = req.body;
+    const { name, surname, email, password_hash, passwordRepeat, phone } = req.body;
 
-    if (password !== passwordRepeat) {
-        return res.redirect("/register?message=las contraseñas no coinciden")
+    // 1. Validar que las contraseñas coincidan
+    if (password_hash !== passwordRepeat) {
+        return res.render("auth", { error: "Las contraseñas no coinciden" });
     }
+
+    // 2. Verificar si el email ya está en uso
     const oldUser = await authService.getUserByEmail(email);
     if (oldUser) {
-        return res.redirect("/register?message=ya existe un usuario con este email")
+        return res.render("auth", { error: "Ya existe un usuario con este email" });
     }
-    const finalPhone = phone || null;
-    const finalDateOfBirth = dateOfBirth || null;
-    // demás comprobaciones
-    const hash = await bcrypt.hash(password, 10);
+
+    // 3. Encriptar la contraseña antes de pasar al controlador
+    // (Opcional si ya usas Hooks en el modelo, pero aquí asegura el dato)
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password_hash, salt);
+
+    // Adjuntamos los datos limpios al objeto req
     req.registerData = {
-        name, email, phone: finalPhone, password: hash, dateOfBirth: finalDateOfBirth
-    }
+        name,
+        surname,
+        email,
+        password_hash: hash,
+        phone: phone || null,
+        id_role: 2, // Rol por defecto
+        id_taller: 1
+    };
+
     next();
 }
 
+/**
+ * Middleware para validar las credenciales en el proceso de Login.
+ */
 async function checkCredentials(req, res, next) {
-    const user = await authService.getUserByEmail(req.body.email);
-    if (!user) {
-        return res.redirect("/login?message=Credenciales incorrectas");
+    const { email, password } = req.body;
+
+    try {
+        const user = await authService.getUserByEmail(email);
+        
+        if (!user) {
+            return res.render("auth", { error: "Credenciales incorrectas" });
+        }
+
+        // Comparar contraseña ingresada con el hash de la base de datos
+        const isPasswordCorrect = await bcrypt.compare(password, user.password_hash);
+        
+        if (!isPasswordCorrect) {
+            return res.render("auth", { error: "Credenciales incorrectas" });
+        }
+
+        // Si es correcto, inicializamos la sesión
+        req.session.user = {
+            id: user.id_user,
+            email: user.email,
+            role: user.id_role,
+            name: user.name
+        };
+
+        next();
+    } catch (error) {
+        console.error("Error en checkCredentials:", error);
+        res.render("auth", { error: "Error interno del servidor" });
     }
-    const isPasswordCorrect = await bcrypt.compare(req.body.password, user.password);
-    if (!isPasswordCorrect) {
-        return res.redirect("/login?message=Credenciales incorrectas");
-    }
-    req.session.user = {
-        email: user.email,
-        role: user.role
-    }
-    next();
 }
 
+/**
+ * Verifica si hay una sesión activa. Si no, redirige al login.
+ */
 async function isLoggedIn(req, res, next) {
-    if (req.session.user) {
-        next()
+    if (req.session && req.session.user) {
+        next();
     } else {
-        return res.redirect("/login?message=Inicia sesión");
+        return res.redirect("/auth/login");
     }
 }
 
+/**
+ * Restringe el acceso por roles específicos.
+ */
 function requireRole(...roles) {
     return (req, res, next) => {
-        
         if (req.session.user && roles.includes(req.session.user.role)) {
             next();
         } else {
-            return res.status(403).redirect("/login?message=No tienes permiso");
+            return res.status(403).render("errors/403", { message: "No tienes permiso para acceder aquí" });
         }
     };
 }
+
+/**
+ * Middleware específico para administradores.
+ */
 async function requireAdmin(req, res, next) {
-    if (req.session && req.session.user && req.session.user.role === "admin") {
+    if (req.session?.user?.role === "admin" || req.session?.user?.role === 1) {
         next();
     } else {
-        res.status(403).redirect("/errors/404");
+        res.status(403).redirect("/auth/login");
     }
 }
 
+/**
+ * Inyecta el usuario de la sesión en las variables locales de Pug.
+ * Útil para mostrar "Hola, Marcos" en el navbar.
+ */
 const injectUserToViews = (req, res, next) => {
-  // Verificamos si existe la sesión y el usuario dentro de ella
-  if (req.session && req.session.user) {
-    res.locals.user = req.session.user;
-  } else {
-    res.locals.user = null; // Opcional: asegura que 'user' esté definido como null si no hay sesión
-  }
-  
-  // Es vital llamar a next() para que la petición continúe su flujo
-  next();
+    res.locals.user = req.session?.user || null;
+    next();
 };
-
 
 export {
     isRegisterDataCorrect,
@@ -83,4 +123,4 @@ export {
     requireRole,
     requireAdmin,
     injectUserToViews
-}
+};
