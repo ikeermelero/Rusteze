@@ -4,9 +4,6 @@ import viewsRoutes from './views/view.routes.js'
 
 const router = Router()
 
-router.get('/', (req, res) => {
-    res.status(200).send("Hola mundo")
-});
 router.use('/api', apiRoutes)
 router.use('/', viewsRoutes)
 

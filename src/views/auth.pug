@@ -3,33 +3,33 @@ extends index
 block content
   .auth-container
     
-    header.auth-header
-      block header-text
+header.auth-header
+    block header-text
         if mode == 'login'
-          h2 Panel de Control
-          p Introduce tus credenciales de mecánico
-        else if mode == 'register'
-          h2 Nuevo Recluta
-          p Únete al equipo de boxes de Rust-eze
-        else if mode == 'forgot'
-          h2 ¿Problemas en el motor?
-          p Introduce tu correo para enviarte una grúa de recuperación
+        h2 Panel de Control
+        p Introduce tus credenciales de mecánico
+    else if mode == 'register'
+        h2 Nuevo Recluta
+        p Únete al equipo de boxes de Rust-eze
+    else if mode == 'forgot'
+        h2 ¿Problemas en el motor?
+        p Introduce tu correo para enviarte una grúa de recuperación
 
     .auth-body
       
-      if mode == 'login'
+    if mode == 'login'
         form#loginForm(action="/views/login" method="POST")
-          .input-group
+        .input-group
             label(for="email") Correo Electrónico
             input#email(type="email" name="email" required placeholder="rayo@mcqueen.com")
-          .input-group
+        .input-group
             label(for="password") Contraseña
             input#password(type="password" name="password_hash" required placeholder="••••••••")
-          button.btn-primary(type="submit") Encender Motores
+        button.btn-primary(type="submit") Encender Motores
           
-          .form-options
+        .form-options
             p ¿Nuevo? 
-              a(href="/views/registro") Regístrate
+            a(href="/views/registro") Regístrate
             p
               a(href="/views/recuperar") ¿Olvidaste la clave?
 
