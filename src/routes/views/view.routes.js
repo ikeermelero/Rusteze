@@ -1,15 +1,19 @@
-import { Router } from 'express'
-import carRoute from './cars.routes.js';
-import authRoute from './auth.routes.js';
+import { Router } from 'express';
+//import authRoutes from './auth.routes.js';
+import carsRoutes from './cars.routes.js';
+import clientRoutes from './client.routes.js';
+import dashboardRoutes from './dashboard.routes.js';
+import repairRoutes from './repair.routes.js';
+import reservationRoutes from './reservation.routes.js';
 
-const router = Router()
+const router = Router();
 
-router.use('/auth', authRoutes)
-router.use('/dashboard', dashboardRoutes)
-router.use('/repairs', repairRoutes)
-router.use('/clients', )
-router.use('/cars', carRoutes)
+// Vinculamos las rutas de vistas
+router.use('/auth', authRoutes);
+router.use('/cars', carsRoutes);
+router.use('/clients', clientRoutes);
+router.use('/dashboard', dashboardRoutes);
+router.use('/repairs', repairRoutes);
+router.use('/reservations', reservationRoutes);
 
-
-
-export default router
+export default router;

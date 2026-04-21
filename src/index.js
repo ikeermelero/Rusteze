@@ -1,29 +1,32 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import pg from 'pg'
+import path from 'path' // Añadimos esto para las rutas de carpetas
 import router from './routes/router.js'
-import {checkDB,syncDB} from './config/db.js'
+import { checkDB, syncDB } from './config/db.js'
 
-dotenv.config() //cargar variables de entorno desde el archivo .env
+dotenv.config()
 const app = express()
 const PORT = process.env.PORT || 3000
 const HOST = process.env.HOST || 'localhost'
-//const JWT_SECRET = process.env.JWT_SECRET;
 
-app.use(express.json()) // ← imprescindible para leer req.body en formato json
-app.use(express.urlencoded()) // ← imprescindible para leer req.body de formularios
-app.use("/", router)
-app.set('views', './src/views')
+// Middlewares para leer datos
+app.use(express.json()) 
+app.use(express.urlencoded({ extended: true })) // Añadido { extended: true }
+
+// Servir archivos estáticos (por si usas CSS/JS en el cliente)
+app.use(express.static('public'))
+
+// Configuración de PUG
+app.set('views', './src/views') 
 app.set('view engine', 'pug')
-//app.set("view engine", pug );
-app.get("/",(req,res)=>{
-    res.send("hello world");
-})
 
+// Rutas
+app.use("/", router)
+
+// Base de datos
 checkDB();
 syncDB();
 
 app.listen(PORT, () => {
-console.log(`Servidor escuchando en el puerto http://${HOST}:${PORT}`)
+    console.log(`Servidor escuchando en http://${HOST}:${PORT}`)
 })
-

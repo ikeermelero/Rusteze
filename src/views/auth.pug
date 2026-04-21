@@ -1,0 +1,36 @@
+doctype html
+html
+  head
+    title Login - Rusteze
+  body
+    h1 Bienvenido a Rusteze
+    
+    if error
+      p(style="color: red")= error
+
+    h2 Iniciar Sesión
+    form(action="/api/user/login" method="POST")
+      div
+        label Email:
+        input(type="email" name="email" required)
+      div
+        label Contraseña:
+        input(type="password" name="password" required)
+      button(type="submit") Entrar
+
+    hr
+
+    h2 Registro
+    form(action="/api/user/register" method="POST")
+      div
+        label Nombre:
+        input(type="text" name="name" required)
+      div
+        label Email:
+        input(type="email" name="email" required)
+      div
+        label Contraseña:
+        input(type="password" name="password" required)
+      //- Importante: id_role (2 para empleado, por ejemplo)
+      input(type="hidden" name="id_role" value="2") 
+      button(type="submit") Registrarse

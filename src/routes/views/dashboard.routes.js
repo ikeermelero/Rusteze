@@ -1,5 +1,6 @@
 import { Router } from "express";
-import userController from "../../controller/view/user.controller.js";
+import userController from '../../controller/views/user.controller.js';
+
 const router = Router();
 
 router.get("/:id/clientes", userController.getAllUsersByGarageId);

@@ -1,1 +1,1 @@
-import userController from '../../controller/view/user.controller.js'
+import userController from '../../controller/views/user.controller.js';
