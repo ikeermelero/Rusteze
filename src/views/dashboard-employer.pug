@@ -1,0 +1,46 @@
+//- src/views/dashboard-employer.pug
+extends layout
+
+block content
+  h1(style="margin-bottom: 1.5rem") Mi Taller
+
+  .stat-grid
+    .stat-card
+      h3= data.totalClientes
+      p Clientes
+
+    .stat-card
+      h3= data.totalReparacionesActivas
+      p Reparaciones activas
+
+  .garage-section
+    h2 🏠 #{data.garage.ciudad} — #{data.garage.direccion}
+
+  .garage-section
+    h2 🔧 Mis reparaciones activas
+
+    if data.reparacionesActivas.length === 0
+      p.empty No tienes reparaciones activas.
+
+    else
+      table
+        thead
+          tr
+            th ID
+            th Cliente
+            th Coche
+            th Matrícula
+            th Diagnóstico
+            th Fecha inicio
+            th Coste
+
+        tbody
+          each rep in data.reparacionesActivas
+            tr
+              td= rep.id
+              td= rep.cliente.nombre + ' ' + rep.cliente.apellido
+              td= rep.coche.marca + ' ' + rep.coche.modelo
+              td= rep.coche.matricula
+              td= rep.diagnostico
+              td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
+              td= rep.coste + ' €'

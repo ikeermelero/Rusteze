@@ -1,10 +1,76 @@
-doctype html
-html(lang="en")
-    head
-        meta(charset="UTF-8")
-        meta(name="viewport", content="width=device-width, initial-scale=1.0")
-    block head
-        title Rusteze - Dashboard
-    body 
-    block content
-        h1 Dashboard Admin 
+//- src/views/dashboard-admin.pug
+extends layout
+
+block content
+  h1(style="margin-bottom: 1.5rem") Panel de Administración
+
+  //- Stats globales
+  .stat-grid
+    .stat-card
+      h3= data.totalClientes
+      p Clientes del taller
+
+    .stat-card
+      h3= data.totalReparacionesActivas
+      p Reparaciones activas
+
+  //- Info del taller
+  .garage-section
+    h2 🏠 #{data.garage.ciudad} — #{data.garage.direccion}
+
+  //- Tabla de reparaciones activas
+  .garage-section
+    h2 🔧 Reparaciones activas
+
+    if data.reparacionesActivas.length === 0
+      p.empty No hay reparaciones activas en este momento.
+
+    else
+      table
+        thead
+          tr
+            th ID
+            th Cliente
+            th Coche
+            th Matrícula
+            th Diagnóstico
+            th Fecha inicio
+            th Coste
+            th Estado
+
+        tbody
+          each rep in data.reparacionesActivas
+            tr
+              td= rep.id
+              td= rep.cliente.nombre + ' ' + rep.cliente.apellido
+              td= rep.coche.marca + ' ' + rep.coche.modelo
+              td= rep.coche.matricula
+              td= rep.diagnostico
+              td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
+              td= rep.coste + ' €'
+              td
+                span.badge.badge-active EN PROGRESO
+
+  //- Tabla de clientes
+  .garage-section
+    h2 👥 Clientes del taller
+
+    if data.clientes.length === 0
+      p.empty No hay clientes registrados.
+
+    else
+      table
+        thead
+          tr
+            th ID
+            th Nombre
+            th Apellido
+            th Email
+
+        tbody
+          each cliente in data.clientes
+            tr
+              td= cliente.id_user
+              td= cliente.name
+              td= cliente.surname
+              td= cliente.email
