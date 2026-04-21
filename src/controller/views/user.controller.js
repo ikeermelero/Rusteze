@@ -13,6 +13,5 @@ async function getAllUsersByGarageId(req, res) {
 
 export default{
   getAllUsersByGarageId,
-  funcion1,
-funcion2,
+  
 };

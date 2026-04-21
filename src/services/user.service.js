@@ -1,62 +1,48 @@
 import { userModel, roleModel } from "../models/index.js";
 import bcrypt from "bcrypt";
 
-const saltRounds = 10;
-
-async function getAllUsersByGarageId(id) {
-    try {
-        const users = await userModel.findAll({
-            where: { id_taller: id },
-            include: [{
-                model: roleModel,
-                where: { name: "Cliente" },
-            }],
-        });
-        return users;
-    } catch (e) {
-        throw new Error(e.message);
-    }
+async function getAllUsersByGarageId (id){
+try {
+    console.log("User Services:", id);
+    const users = await userModel.findAll({
+      where: { id_taller: id },
+      include: [
+        {
+          model: roleModel,
+          where: { name: "Cliente" },
+        },
+      ],
+    });
+    return users;
+  } catch (e) {
+    throw new Error(e.message);
+  }
 }
 
-// --- NUEVAS FUNCIONES PARA TU TAREA ---
-
-async function register(userData) {
-    try {
-        // Hasheamos la contraseña: '1234' -> '$2b$10$asdf...'
-        const hashedPassword = await bcrypt.hash(userData.password, saltRounds);
-        
-        const newUser = await userModel.create({
-            ...userData,
-            password_hash: hashedPassword
-            // id_role y id_taller deberían venir en userData desde el formulario o controlador
-        });
-        return newUser;
-    } catch (e) {
-        throw new Error("Error en el registro: " + e.message);
-    }
+async function getAllUsers() {
+    const users = await UserModel.findAll();
+    return users;
 }
 
-async function login(email, password) {
-    try {
-        const user = await userModel.findOne({ where: { email } });
-        
-        if (!user) {
-            throw new Error("El usuario no existe");
-        }
+async function getUserByEmail(email){
+    const user = await UserModel.findOne({where:{email}});
+    return user;
+}
 
-        const isMatch = await bcrypt.compare(password, user.password_hash);
-        if (!isMatch) {
-            throw new Error("Contraseña incorrecta");
-        }
+async function getUserById(id){
+    const user = await UserModel.findByPk(id);
+    return user;
+}
 
-        return user;
-    } catch (e) {
-        throw new Error("Error en el login: " + e.message);
-    }
+async function createUser(data){
+    const newUser = await UserModel.create(data);
+    return newUser;
 }
 
 export default {
     getAllUsersByGarageId,
-    register,
-    login
+    getAllUsers,
+    getUserById,
+    createUser,
+    getUserByEmail
 }
