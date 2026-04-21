@@ -2,7 +2,7 @@ import repairService from "../../services/repair.service.js";
 
 async function getAllRepairs(req, res) {
     const repairs = await repairService.findAllRepairs();
-    res.render('repairs', { repairs });
+    res.render('repair', { repairs });
 
 }
 

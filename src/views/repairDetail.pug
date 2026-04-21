@@ -1,0 +1,34 @@
+extends layout
+
+block content
+  .container
+    h1 Detalles de la Reparación ##{repair.id_repair}
+    hr
+    .row
+      .col-md-6
+        h3 Información del Vehículo
+        p 
+          strong Marca: 
+          | #{repair.Car.brand}
+        p 
+          strong Modelo: 
+          | #{repair.Car.model}
+        p 
+          strong Matrícula: 
+          | #{repair.Car.plate}
+      
+      .col-md-6
+        h3 Cliente
+        p 
+          strong Nombre: 
+          | #{repair.Car.User.name} #{repair.Car.User.surname}
+
+    .row.mt-4
+      .col-12
+        h3 Estado de la Reparación
+       
+        span.badge(class=repair.status === 'COMPLETED' ? 'bg-success' : 'bg-warning')
+          | #{repair.status}
+        p= repair.diagnosis
+    
+    a.btn.btn-secondary.mt-3(href="/repairs") Volver al listado

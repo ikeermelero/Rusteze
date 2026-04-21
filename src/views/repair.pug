@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1 Lista de Reparaciones
+  table
+    thead
+      tr
+        th ID
+        th Coche
+        th Matrícula
+        th Cliente
+    tbody
+      each r in repairs
+        //- IMPORTANTE: 'tr' debe tener más espacios que 'each'
+        tr
+          td= r.id_repair
+          td= `${r.Car.brand} ${r.Car.model}`
+          td= r.Car.plate
+          td= `${r.Car.User.name} ${r.Car.User.surname}`
+            a.btn.btn-primary(href=`/repairs/${r.id_repair}`) Ver detalle
