@@ -4,20 +4,18 @@ block content
   .container.py-5
     .row.justify-content-center.g-4
 
-      //- ==========================================
-      //- SECCIÓN DE INICIO DE SESIÓN (LOGIN)
-      //- ==========================================
+      
       .col-md-6.col-lg-5
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
             h2.text-center.mb-4 Iniciar Sesión
 
-            //- Muestra errores si el controlador envía alguno (ej: "Contraseña incorrecta")
+            
             if error
               .alert.alert-danger(role="alert")
                 = error
             
-            //- Mensaje de éxito si viene de un registro reciente
+           
             if typeof success !== 'undefined'
               .alert.alert-success(role="alert")
                 | ¡Registro completado! Ya puedes iniciar sesión.
@@ -44,9 +42,7 @@ block content
               .d-grid
                 button.btn.btn-primary(type="submit") Entrar
 
-      //- ==========================================
-      //- SECCIÓN DE REGISTRO DE USUARIO
-      //- ==========================================
+      
       .col-md-6.col-lg-7
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
@@ -91,7 +87,7 @@ block content
 
                 .col-md-12.mb-3
                   label.form-label(for="registerPassword") Contraseña
-                  //- name="password_hash" para que el controlador lo reciba directo
+                  
                   input#registerPassword.form-control(
                     type="password"
                     name="password_hash"
@@ -99,7 +95,7 @@ block content
                     required
                   )
 
-                //- Campos ocultos para completar el modelo User
+                
                 input(type="hidden" name="id_role" value="2")
                 input(type="hidden" name="id_taller" value="1")
 

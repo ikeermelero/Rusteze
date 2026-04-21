@@ -2,7 +2,7 @@ import User from "../../models/user.model.js";
 import bcrypt from "bcryptjs";
 
 export async function viewLogin(req, res) {
-    // Importante pasar error: null para que Pug no falle al buscar la variable
+    
     res.render('auth', { error: null }); 
 }
 

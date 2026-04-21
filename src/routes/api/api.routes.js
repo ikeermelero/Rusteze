@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import userRoutes from './user.routes.js'; // Solo un punto: misma carpeta
+import userRoutes from './user.routes.js'; 
 import carRoutes from './car.routes.js';
 
 const router = Router();

@@ -1,16 +1,15 @@
 import { Router } from 'express'
 // import carRoutes from './cars.routes.js'; 
-import authRoutes from './auth.routes.js'; // 1. Cambiado a plural para que coincida abajo
+import authRoutes from './auth.routes.js'; 
 import dashboardRoutes from './dashboard.routes.js';
 // import repairRoutes from './repair.routes.js';
 import { isLoggedIn, requireAdmin, requireRole } from "../../middleware/auth.middleware.js";
 
 const router = Router();
 
-// Vinculamos las rutas de vistas
-router.use('/auth', authRoutes); // Ahora sí existe authRoutes
 
-// 2. COMENTA estas líneas porque carsRoutes, clientRoutes, etc., no están definidas arriba
+router.use('/auth', authRoutes); 
+
 // router.use('/cars', carsRoutes);
 // router.use('/clients', clientRoutes);
 router.use('/dashboard', dashboardRoutes);
