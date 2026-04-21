@@ -1,0 +1,49 @@
+extends layout
+
+block content
+  .service-page
+    header.service-hero
+      .container
+        span.badge-racing NUESTRA TECNOLOGÍA
+        h1.display-4.fw-bold SOLUCIONES INTEGRALES
+        p.lead.text-muted Diseñado por mecánicos, para mecánicos. La precisión es nuestra moneda de cambio.
+
+    section.service-grid.container
+      .row.g-4
+        //- Servicio 1: Gestión de Boxes
+        .col-md-4
+          .service-card
+            .card-icon 
+            h3 Gestión de Boxes
+            p Controla la entrada y salida de vehículos en tiempo real. Asigna mecánicos a tareas específicas y monitorea el progreso de cada reparación.
+
+        //- Servicio 2: Historial Clínico
+        .col-md-4
+          .service-card
+            .card-icon 
+            h3 Historial del Motor
+            p Archivo digital completo de cada vehículo. Cada cambio de aceite, ajuste de tuercas y diagnóstico queda registrado para siempre.
+
+        //- Servicio 3: Stock de Repuestos
+        .col-md-4
+          .service-card
+            .card-icon 
+            h3 Inventario Inteligente
+            p Gestión de piezas y repuestos con alertas de stock bajo. No dejes que una pieza faltante detenga la línea de producción.
+
+    section.theory-section.bg-dark.text-light.py-5.mt-5
+      .container
+        .row.align-items-center
+          .col-lg-6
+            h2.accent-text ¿Por qué digitalizar tu taller?
+            p La gestión manual con papeles y pizarras genera errores. Rust-eze Garage centraliza la información para reducir tiempos muertos hasta en un 30%.
+            ul.theory-list
+              li  **Velocidad:** Generación de presupuestos en segundos.
+              li  **Orden:** Organización de prioridades según la urgencia del cliente.
+              li  **Crecimiento:** Analíticas de rendimiento para saber qué servicios son más rentables.
+          .col-lg-6
+            img.img-fluid.rounded-3.shadow-lg(src="https://images.unsplash.com/photo-1504222490345-c075b6008014?q=80&w=800&auto=format&fit=crop" alt="Mecánico trabajando")
+
+    section.cta-footer.text-center.py-5
+      h2 ¿Listo para encender motores?
+      a.btn-premium(href="/auth/register") EMPEZAR AHORA

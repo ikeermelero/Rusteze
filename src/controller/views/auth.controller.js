@@ -8,5 +8,11 @@ export async function viewForgot(req, res) {
     return res.render("auth", {mode: 'forgot'});
 }
 
+export async function viewService(req, res) {
+    return res.render("service", {mode: 'service'});
+}
 
-export default {viewLogin, viewRegister, viewForgot}
+
+
+
+export default {viewLogin, viewRegister, viewForgot, viewService}

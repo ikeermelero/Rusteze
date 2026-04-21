@@ -17,6 +17,7 @@ router.get("/forgot", (req, res) => {
 router.get("/login",  authController.viewLogin) ;
 router.get("/register",  authController.viewRegister) ;
 router.get("/forgot",  authController.viewForgot) ; 
+router.get("/service",  authController.viewService) ;
 export default router;
 
 /* ojo aca es */

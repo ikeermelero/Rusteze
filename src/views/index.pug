@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  //- Esta sección llenará el espacio oscuro que ves en tu imagen
+  section.landing-hero#dynamic-bg
+    .hero-overlay
+    .hero-content
+      .badge-racing RUST-EZE GARAGE
+      h1.landing-title ALTO RENDIMIENTO EN TU TALLER
+      p.landing-lead Gestiona reparaciones y clientes con la precisión de un equipo de Fórmula 1.
+      
+      .hero-actions
+        a.btn-premium(href="/auth/login") INICIAR SESIÓN
+        a.btn-outline(href="/auth/register") REGISTRARSE
+
+  script.
+    // Script para cargar la imagen dinámica de la API
+    window.onload = function() {
+      const hero = document.getElementById('dynamic-bg');
+      // API de Unsplash para fotos de motores/talleres
+      const apiUrl = 'https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&q=80&w=1600';
+      hero.style.backgroundImage = `url('${apiUrl}')`;
+    }

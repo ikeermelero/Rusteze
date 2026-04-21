@@ -8,8 +8,11 @@ router.get('/', (req, res) => {
     res.status(200).send("Hola api")
 });
 
+
+
 router.use('/users', userRoutes)
 router.use('/cars', carRoutes)
+
 
 
 export default router
