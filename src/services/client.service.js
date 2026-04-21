@@ -1,5 +1,5 @@
 // src/services/dashboard.service.js
-import { userModel } from '../models/index.js'
+import { userModel, carModel } from '../models/index.js'
 
 async function getClientDashboard(clientId) {
     const authUser = await userModel.findByPk(clientId, {
@@ -21,6 +21,23 @@ async function getClientDashboard(clientId) {
     }
 }
 
+async function getClientDetails(clientId) {
+    const client = await userModel.findByPk(clientId, {
+        attributes: ['id_user', 'name', 'surname', 'email', 'id_taller']
+    })
+    if (!client) throw new Error('Cliente no encontrado')
+
+    const cars = await carModel.findAll({
+        where: { id_user: clientId},
+        attributes: ['id_car', 'brand', 'model', 'year']
+    })
+    if (!cars) throw new Error('Coches no encontrados')
+    
+    return {client, cars}
+
+}
+
 export default {
-    getClientDashboard
+    getClientDashboard,
+    getClientDetails
 }

@@ -1,1 +1,41 @@
-asdasd
+extends layout
+
+block content
+  .garage-section
+    h2 👤 Detalle del cliente
+
+    .stat-grid
+      .stat-card
+        h3= data.client.name + ' ' + data.client.surname
+        p Nombre completo
+
+      .stat-card
+        h3= data.client.email
+        p Email
+
+      .stat-card
+        h3= data.cars.length
+        p Coches registrados
+
+  .garage-section
+    h2 🚗 Coches del cliente
+
+    if data.cars.length === 0
+      p.empty Este cliente no tiene coches registrados.
+
+    else
+      table
+        thead
+          tr
+            th ID
+            th Marca
+            th Modelo
+            th Año
+
+        tbody
+          each car in data.cars
+            tr
+              td= car.id_car
+              td= car.brand
+              td= car.model
+              td= car.year

@@ -5,5 +5,6 @@ import clientController from "../../controller/views/client.controller.js";
 const router = Router();
 
 router.get("/", clientController.getClientDashboard);
+router.get("/:id", clientController.getClientDetails);
 
 export default router;
