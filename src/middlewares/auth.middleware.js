@@ -1,4 +1,4 @@
-import authService from "../services/auth.service.js";
+import userService from "../services/user.service.js";
 import bcrypt from "bcrypt";
 
 async function isRegisterDataCorrect(req, res, next) {
@@ -7,7 +7,7 @@ async function isRegisterDataCorrect(req, res, next) {
     if (password !== passwordRepeat) {
         return res.redirect("/register?message=las contraseñas no coinciden")
     }
-    const oldUser = await authService.getUserByEmail(email);
+    const oldUser = await userService.getUserByEmail(email);
     if (oldUser) {
         return res.redirect("/register?message=ya existe un usuario con este email")
     }
@@ -22,7 +22,7 @@ async function isRegisterDataCorrect(req, res, next) {
 }
 
 async function checkCredentials(req, res, next) {
-    const user = await authService.getUserByEmail(req.body.email);
+    const user = await userService.getUserByEmail(req.body.email);
     if (!user) {
         return res.redirect("/login?message=Credenciales incorrectas");
     }

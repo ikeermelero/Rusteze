@@ -5,8 +5,6 @@ const router = Router();
 router.get("/", dashboardController.getDashboard);
 
 
-
-
 /* router.get("/:id", (req, res) => 
     /* const id = req.params.id
     const user = user.find(u => u.id === id)
