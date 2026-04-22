@@ -4,7 +4,7 @@ import dashboardService from '../../services/dashboard.service.js'
 export async function getDashboard(req, res) {
     // let { id, rol } = req.user  ← descomentar cuando tengas auth
     let id = 1;
-    let rol = 'mecanico';
+    let rol = 'admin';
 
     try {
         if (rol === 'admin') {
