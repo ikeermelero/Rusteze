@@ -4,16 +4,23 @@ block content
   .container.py-5
     .row.justify-content-center.g-4
 
-      //- LOGIN
+      
       .col-md-6.col-lg-5
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
             h2.text-center.mb-4 Iniciar Sesión
 
+            
             if error
-              .alert.alert-danger(role="alert")= error
+              .alert.alert-danger(role="alert")
+                = error
+            
+           
+            if typeof success !== 'undefined'
+              .alert.alert-success(role="alert")
+                | ¡Registro completado! Ya puedes iniciar sesión.
 
-            form(action="/login" method="POST")
+            form(action="/auth/login" method="POST")
               .mb-3
                 label.form-label(for="email") Email
                 input#email.form-control(
@@ -22,6 +29,7 @@ block content
                   placeholder="Correo electrónico"
                   required
                 )
+
               .mb-3
                 label.form-label(for="password") Contraseña
                 input#password.form-control(
@@ -30,56 +38,66 @@ block content
                   placeholder="Contraseña"
                   required
                 )
+
               .d-grid
                 button.btn.btn-primary(type="submit") Entrar
 
-      //- REGISTRO
+      
       .col-md-6.col-lg-7
         .card.shadow-sm.border-0.rounded-4
           .card-body.p-4
             h2.text-center.mb-4 Registro de Usuario
 
-            form(action="/register" method="POST")
+            form(action="/auth/register" method="POST")
               .row
                 .col-md-6.mb-3
                   label.form-label(for="name") Nombre
                   input#name.form-control(
                     type="text"
                     name="name"
+                    placeholder="Tu nombre"
                     required
                   )
+                
+                .col-md-6.mb-3
+                  label.form-label(for="surname") Apellido
+                  input#surname.form-control(
+                    type="text"
+                    name="surname"
+                    placeholder="Tu apellido"
+                    required
+                  )
+
                 .col-md-6.mb-3
                   label.form-label(for="registerEmail") Email
                   input#registerEmail.form-control(
                     type="email"
                     name="email"
+                    placeholder="correo@ejemplo.com"
                     required
                   )
+
                 .col-md-6.mb-3
-                  label.form-label(for="phone") Teléfono (opcional)
+                  label.form-label(for="phone") Teléfono
                   input#phone.form-control(
                     type="text"
                     name="phone"
+                    placeholder="Ej: 123456789"
                   )
-                .col-md-6.mb-3
-                  label.form-label(for="dateOfBirth") Fecha de nacimiento
-                  input#dateOfBirth.form-control(
-                    type="date"
-                    name="dateOfBirth"
-                  )
-                .col-md-6.mb-3
+
+                .col-md-12.mb-3
                   label.form-label(for="registerPassword") Contraseña
+                  
                   input#registerPassword.form-control(
                     type="password"
-                    name="password"
+                    name="password_hash"
+                    placeholder="Crea una contraseña segura"
                     required
                   )
-                .col-md-6.mb-3
-                  label.form-label(for="passwordRepeat") Repetir Contraseña
-                  input#passwordRepeat.form-control(
-                    type="password"
-                    name="passwordRepeat"
-                    required
-                  )
+
+                
+                input(type="hidden" name="id_role" value="2")
+                input(type="hidden" name="id_taller" value="1")
+
               .d-grid.mt-3
-                button.btn.btn-success(type="submit") Registrarse
+                button.btn.btn-success(type="submit") Crear Cuenta

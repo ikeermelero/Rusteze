@@ -1,21 +1,22 @@
 import { Router } from 'express'
-//import carRoute from './cars.routes.js';
-import authRoutes from './auth.routes.js';
+// import carRoutes from './cars.routes.js'; 
+import authRoutes from './auth.routes.js'; 
 import dashboardRoutes from './dashboard.routes.js';
-import clientRoutes from './client.routes.js';
-//import repairRoutes from './repair.routes.js';
-//import { isLoggedIn,requireAdmin,requireRole } from "../../middlewares/authiddleware.js";
+// import repairRoutes from './repair.routes.js';
+import { isLoggedIn, requireAdmin, requireRole } from "../../middleware/auth.middleware.js";
+
+const router = Router();
 
 
-const router = Router()
+router.use('/auth', authRoutes); 
 
-router.use('/', authRoutes)
-router.use('/dashboard', dashboardRoutes)
-//router.use('/dashboard',isLoggedIn, requireAdmin, dashboardRoutes)
-//router.use('/repairs', repairRoutes)
-router.use('/client', clientRoutes )
-//router.use('/cars', carRoutes)
+// router.use('/cars', carsRoutes);
+// router.use('/clients', clientRoutes);
+router.use('/dashboard', dashboardRoutes);
+// router.use('/repairs', repairRoutes);
+// router.use('/reservations', reservationRoutes);
 
+router.use('/', authRoutes); // Usa el nombre plural aquí también
+router.use('/dashboard', isLoggedIn, requireAdmin, dashboardRoutes);
 
-
-export default router
+export default router;

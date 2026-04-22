@@ -1,4 +1,5 @@
-import {userModel, roleModel} from "../models/index.js";
+import { userModel, roleModel } from "../models/index.js";
+import bcrypt from "bcryptjs";
 
 async function getAllUsersByGarageId (id){
 try {
