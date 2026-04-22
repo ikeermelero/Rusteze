@@ -1,4 +1,4 @@
-import { repairModel, carModel, userModel } from '../models/index.js';
+import { repairModel, carModel, userModel, taskModel } from '../models/index.js';
 
 
 async function findAllRepairs() {
@@ -18,13 +18,19 @@ async function findAllRepairs() {
 
 async function findRepairById(id) {
     return await repairModel.findByPk(id, {
-        include: [{
-            model: carModel,
-            include: [{
-                model: userModel,
-                attributes: ['name', 'surname', 'phone', 'email']
-            }]
-        }]
+        include: [
+            {
+                model: carModel,
+                include: [{
+                    model: userModel,
+                    attributes: ['name', 'surname', 'phone', 'email']
+                }]
+            },
+            {
+                model: taskModel,
+                attributes: ['name']
+            }
+        ]
     });
 }
 

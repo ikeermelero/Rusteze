@@ -1,9 +1,10 @@
 extends layout
 
 block content
-  .container
+  .container.mt-4
     h1 Detalles de la Reparación ##{repair.id_repair}
     hr
+    
     .row
       .col-md-6
         h3 Información del Vehículo
@@ -26,9 +27,32 @@ block content
     .row.mt-4
       .col-12
         h3 Estado de la Reparación
-       
-        span.badge(class=repair.status === 'COMPLETED' ? 'bg-success' : 'bg-warning')
+        
+        - var statusClass = repair.status === 'COMPLETED' ? 'bg-success' : (repair.status === 'IN_PROGRESS' ? 'bg-warning text-dark' : 'bg-secondary')
+        
+        span.badge(class=statusClass)
           | #{repair.status}
-        p= repair.diagnosis
+          
+        p.mt-2
+          strong Diagnóstico: 
+          | #{repair.diagnosis}
+
+    hr
     
-    a.btn.btn-secondary.mt-3(href="/repairs") Volver al listado
+    .row.mt-4
+      .col-12
+        h3 Tareas Asociadas
+        if repair.Tasks && repair.Tasks.length > 0
+          table.table.table-hover
+            thead.table-light
+              tr
+                th Name
+            tbody
+              each task in repair.Tasks
+                tr 
+                  td= task.name 
+        else
+          .alert.alert-info No hay tareas registradas para esta reparación todavía.
+    
+    .mt-4
+      a.btn.btn-secondary(href="/repairs") Volver al listado
