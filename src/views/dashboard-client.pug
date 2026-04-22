@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .garage-section
+    h2 👥 Clientes del taller
+
+    if data.totalClientes === 0
+      p.empty No hay clientes registrados en este taller.
+
+    else
+      p.mb-2 Total: #{data.totalClientes} clientes
+
+      table
+        thead
+          tr
+            th ID
+            th Nombre
+            th Apellido
+            th Email
+
+        tbody
+          each cliente in data.clientes
+            tr
+              td= cliente.id_user
+              td= cliente.name
+              td= cliente.surname
+              td= cliente.email
+              td 
+                a.btn.btn-sm.btn-primary(href=`/client/${cliente.id_user}`) Ver detalles
