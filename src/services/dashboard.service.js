@@ -13,7 +13,10 @@ async function getAdminDashboard(adminId) {
     if (!garage) throw new Error('Taller no encontrado para este admin')
 
     const clientes = await userModel.findAll({
-        where: { id_taller: garage.id_taller },
+        where: { 
+            id_taller: garage.id_taller, 
+            id_role: 3
+        },
         attributes: ['id_user', 'name', 'surname', 'email']
     })
 

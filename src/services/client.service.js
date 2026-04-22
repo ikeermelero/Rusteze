@@ -11,7 +11,10 @@ async function getClientDashboard(clientId) {
 
     // Todos los usuarios del mismo taller
     const clientes = await userModel.findAll({
-        where: { id_taller: authUser.id_taller },
+        where: { 
+            id_taller: authUser.id_taller,
+            id_role: 3
+        },
         attributes: ['id_user', 'name', 'surname', 'email']
     })
 
