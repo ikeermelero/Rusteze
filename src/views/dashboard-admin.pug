@@ -1,75 +1,185 @@
 extends layout
 
 block content
-  h1(style="margin-bottom: 1.5rem") Panel de Administración
+  .dashboard-wrapper
 
-  //- Stats globales
-  .stat-grid
-    .stat-card
-      h3= data.totalClientes
-      p Clientes del taller
+    .dashboard-header
+      .dashboard-title-block
+        span.dashboard-badge ADMINISTRACIÓN
+        h1.dashboard-title Panel de Control
+      .dashboard-location
+        span.location-icon ⚙
+        span= data.garage.ciudad + ' — ' + data.garage.direccion
 
-    .stat-card
-      h3= data.totalReparacionesActivas
-      p Reparaciones activas
+    .stat-grid
+      .stat-card
+        .stat-number= data.totalClientes
+        .stat-label Clientes del taller
+        .stat-bar
+      .stat-card.stat-card--active
+        .stat-number= data.totalReparacionesActivas
+        .stat-label Reparaciones activas
+        .stat-bar
 
-  //- Info del taller
-  .garage-section
-    h2 🏠 #{data.garage.ciudad} — #{data.garage.direccion}
+    .charts-grid
+      .chart-card
+        .chart-header
+          span.chart-badge DISTRIBUCIÓN
+          h3.chart-title Marcas en reparación
+        .chart-body
+          canvas#chartMarcas
+      .chart-card
+        .chart-header
+          span.chart-badge COSTES
+          h3.chart-title Coste por reparación
+        .chart-body
+          canvas#chartCostes
+      .chart-card
+        .chart-header
+          span.chart-badge GLOBAL
+          h3.chart-title Clientes vs Activas
+        .chart-body
+          canvas#chartGlobal
 
-  //- Tabla de reparaciones activas
-  .garage-section
-    h2 🔧 Reparaciones activas
+    .dashboard-section
+      .section-header
+        h2.section-title
+          span.section-icon 🔧
+          | &nbsp;Reparaciones activas
+      if data.reparacionesActivas.length === 0
+        .empty-state
+          p.empty-text No hay reparaciones activas en este momento.
+      else
+        .table-wrapper
+          table.repair-table
+            thead
+              tr
+                th Cliente
+                th Vehículo
+                th Matrícula
+                th Diagnóstico
+                th Fecha inicio
+                th Coste
+                th Estado
+            tbody
+              each rep in data.reparacionesActivas
+                tr
+                  td= rep.cliente.nombre + ' ' + rep.cliente.apellido
+                  td= rep.coche.marca + ' ' + rep.coche.modelo
+                  td.td-plate= rep.coche.matricula
+                  td.td-diag= rep.diagnostico
+                  td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
+                  td.td-cost= rep.coste + ' €'
+                  td
+                    span.status-badge.status-active EN PROGRESO
 
-    if data.reparacionesActivas.length === 0
-      p.empty No hay reparaciones activas en este momento.
+    .dashboard-section(style="margin-top: 1.5rem")
+      .section-header
+        h2.section-title
+          span.section-icon 👥
+          | &nbsp;Clientes del taller
+      if data.clientes.length === 0
+        .empty-state
+          p.empty-text No hay clientes registrados.
+      else
+        .table-wrapper
+          table.repair-table
+            thead
+              tr
+                th Nombre
+                th Apellido
+                th Email
+            tbody
+              each cliente in data.clientes
+                tr
+                  td= cliente.name
+                  td= cliente.surname
+                  td.td-email= cliente.email
 
-    else
-      table
-        thead
-          tr
-            th ID
-            th Cliente
-            th Coche
-            th Matrícula
-            th Diagnóstico
-            th Fecha inicio
-            th Coste
-            th Estado
+  script(src="https://cdn.jsdelivr.net/npm/chart.js")
+  script.
+    const reparaciones = !{JSON.stringify(data.reparacionesActivas)};
+    const totalClientes = !{JSON.stringify(data.totalClientes)};
+    const totalActivas = !{JSON.stringify(data.totalReparacionesActivas)};
 
-        tbody
-          each rep in data.reparacionesActivas
-            tr
-              td= rep.id
-              td= rep.cliente.nombre + ' ' + rep.cliente.apellido
-              td= rep.coche.marca + ' ' + rep.coche.modelo
-              td= rep.coche.matricula
-              td= rep.diagnostico
-              td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
-              td= rep.coste + ' €'
-              td
-                span.badge.badge-active EN PROGRESO
+    Chart.defaults.color = '#ffffff';
+    Chart.defaults.borderColor = '#3a3a3c';
 
-  //- Tabla de clientes
-  .garage-section
-    h2 👥 Clientes del taller
+    const ROJO = '#a30000';
+    const ROJO_SUAVE = 'rgba(163,0,0,0.7)';
+    const GRIS = '#8e8e93';
+    const COLORES = ['#a30000','#c0392b','#e74c3c','#8e8e93','#636366','#48484a','#ff6b6b','#ff4757','#2f3542','#57606f'];
 
-    if data.clientes.length === 0
-      p.empty No hay clientes registrados.
+    const marcasCount = {};
+    reparaciones.forEach(r => {
+      const marca = r.coche.marca;
+      marcasCount[marca] = (marcasCount[marca] || 0) + 1;
+    });
 
-    else
-      table
-        thead
-          tr
-            th ID
-            th Nombre
-            th Apellido
-            th Email
+    new Chart(document.getElementById('chartMarcas'), {
+      type: 'pie',
+      data: {
+        labels: Object.keys(marcasCount),
+        datasets: [{
+          data: Object.values(marcasCount),
+          backgroundColor: COLORES.slice(0, Object.keys(marcasCount).length),
+          borderColor: '#1c1c1e',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { padding: 8, font: { size: 10 }, boxWidth: 10 }
+          }
+        }
+      }
+    });
 
-        tbody
-          each cliente in data.clientes
-            tr
-              td= cliente.id_user
-              td= cliente.name
-              td= cliente.surname
-              td= cliente.email
+    new Chart(document.getElementById('chartCostes'), {
+      type: 'bar',
+      data: {
+        labels: reparaciones.map(r => r.coche.matricula),
+        datasets: [{
+          label: 'Coste (€)',
+          data: reparaciones.map(r => parseFloat(r.coste) || 0),
+          backgroundColor: ROJO_SUAVE,
+          borderColor: ROJO,
+          borderWidth: 1,
+          borderRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { grid: { color: '#3a3a3c' }, ticks: { font: { size: 9 }, maxRotation: 45 } },
+          y: { grid: { color: '#3a3a3c' }, beginAtZero: true }
+        }
+      }
+    });
+
+    new Chart(document.getElementById('chartGlobal'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Clientes totales', 'Reparaciones activas'],
+        datasets: [{
+          data: [totalClientes, totalActivas],
+          backgroundColor: [GRIS, ROJO],
+          borderColor: '#1c1c1e',
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '65%',
+        plugins: {
+          legend: {
+            position: 'bottom',
+            labels: { padding: 12, font: { size: 10 }, boxWidth: 10 }
+          }
+        }
+      }
+    });

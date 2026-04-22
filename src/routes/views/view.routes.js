@@ -8,15 +8,19 @@ import { isLoggedIn, requireAdmin, requireRole } from "../../middleware/auth.mid
 const router = Router();
 
 
-router.use('/auth', authRoutes); 
+router.use('/', authRoutes)
+router.use('/dashboard', dashboardRoutes)
+//router.use('/dashboard',isLoggedIn, requireAdmin, dashboardRoutes)
+//router.use('/repairs', repairRoutes)
+router.use('/client', clientRoutes )
+//router.use('/cars', carRoutes)
 
-// router.use('/cars', carsRoutes);
-// router.use('/clients', clientRoutes);
-router.use('/dashboard', dashboardRoutes);
-// router.use('/repairs', repairRoutes);
-// router.use('/reservations', reservationRoutes);
+router.get('/', (req, res) => {
+    res.render('index'); 
+});
 
-router.use('/', authRoutes); // Usa el nombre plural aquí también
-router.use('/dashboard', isLoggedIn, requireAdmin, dashboardRoutes);
+router.get('/servicios', (req, res) => {
+    res.render('service'); 
+});
 
 export default router;

@@ -1,103 +1,65 @@
 extends layout
 
 block content
-  .container.py-5
-    .row.justify-content-center.g-4
+  .auth-container
+    header.auth-header
+      block header-text
+      if mode == 'login'
+        h2.auth-title Panel de Control
+        p.auth-subtitle Introduce tus credenciales de mecánico
+      else if mode == 'register'
+        h2.auth-title Nuevo Recluta
+        p.auth-subtitle Únete al equipo de boxes de Rust-eze
+      else if mode == 'forgot'
+        h2.auth-title ¿Problemas en el motor?
+        p.auth-subtitle Introduce tu correo para enviarte una grúa de recuperación
 
+    .auth-body
+      if mode == 'login'
+        form#loginForm(action="/views/login" method="POST")
+          .input-group
+            label(for="email") Correo Electrónico
+            input#email(type="email" name="email" required placeholder="rayo@mcqueen.com")
+          .input-group
+            label(for="password") Contraseña
+            input#password(type="password" name="password_hash" required placeholder="••••••••")
+          button.btn-primary(type="submit") Encender Motores
+          .form-options
+            p ¿Nuevo? 
+              a(href="/auth/register") Regístrate
+            p
+              a(href="/auth/forgot") ¿Olvidaste la clave?
+
+      else if mode == 'register'
+        form#registerForm(action="/views/register" method="POST")
+          .input-group
+            label(for="name") Nombre
+            input#name(type="text" name="name" required placeholder="Ej. Rayo")
+          .input-group
+            label(for="surname") Apellido
+            input#surname(type="text" name="surname" required placeholder="Ej. McQueen")
+          .input-group
+            label(for="email") Correo
+            input#email(type="email" name="email" required placeholder="tu@correo.com")
+          .input-group
+            label(for="password") Contraseña
+            input#password(type="password" name="password_hash" required placeholder="Mínimo 8 caracteres")
+            label(for="passwordRepeat") Repetir Contraseña
+            input#passwordRepeat(type="password" name="passwordRepeat" required placeholder="Mínimo 8 caracteres")
+          button.btn-primary(type="submit") Unirse a la Escudería
+          .form-options
+            p
+              a(href="/auth/login") Ya tengo cuenta, volver al garage
       
-      .col-md-6.col-lg-5
-        .card.shadow-sm.border-0.rounded-4
-          .card-body.p-4
-            h2.text-center.mb-4 Iniciar Sesión
+      else if mode == 'forgot'
+        form#forgotForm(action="/views/forgot" method="POST")
+          .input-group
+            label(for="email") Tu Correo de Mecánico
+            input#email(type="email" name="email" required placeholder="mecanico@rusteze.com")
+          button.btn-primary(type="submit") Enviar Auxilio Vial
+          .form-options
+            p
+              a(href="/auth/login") Volver al Garage y reintentar logueo
 
-            
-            if error
-              .alert.alert-danger(role="alert")
-                = error
-            
-           
-            if typeof success !== 'undefined'
-              .alert.alert-success(role="alert")
-                | ¡Registro completado! Ya puedes iniciar sesión.
-
-            form(action="/auth/login" method="POST")
-              .mb-3
-                label.form-label(for="email") Email
-                input#email.form-control(
-                  type="email"
-                  name="email"
-                  placeholder="Correo electrónico"
-                  required
-                )
-
-              .mb-3
-                label.form-label(for="password") Contraseña
-                input#password.form-control(
-                  type="password"
-                  name="password"
-                  placeholder="Contraseña"
-                  required
-                )
-
-              .d-grid
-                button.btn.btn-primary(type="submit") Entrar
-
-      
-      .col-md-6.col-lg-7
-        .card.shadow-sm.border-0.rounded-4
-          .card-body.p-4
-            h2.text-center.mb-4 Registro de Usuario
-
-            form(action="/auth/register" method="POST")
-              .row
-                .col-md-6.mb-3
-                  label.form-label(for="name") Nombre
-                  input#name.form-control(
-                    type="text"
-                    name="name"
-                    placeholder="Tu nombre"
-                    required
-                  )
-                
-                .col-md-6.mb-3
-                  label.form-label(for="surname") Apellido
-                  input#surname.form-control(
-                    type="text"
-                    name="surname"
-                    placeholder="Tu apellido"
-                    required
-                  )
-
-                .col-md-6.mb-3
-                  label.form-label(for="registerEmail") Email
-                  input#registerEmail.form-control(
-                    type="email"
-                    name="email"
-                    placeholder="correo@ejemplo.com"
-                    required
-                  )
-
-                .col-md-6.mb-3
-                  label.form-label(for="phone") Teléfono
-                  input#phone.form-control(
-                    type="text"
-                    name="phone"
-                    placeholder="Ej: 123456789"
-                  )
-
-                .col-md-12.mb-3
-                  label.form-label(for="registerPassword") Contraseña
-                  
-                  input#registerPassword.form-control(
-                    type="password"
-                    name="password_hash"
-                    placeholder="Crea una contraseña segura"
-                    required
-                  )
-
-                
-                input(type="hidden" name="id_role" value="2")
-                input(type="hidden" name="id_taller" value="1")
-
-              .d-grid.mt-3
-                button.btn.btn-success(type="submit") Crear Cuenta
+    if error
+      p.error-message= error

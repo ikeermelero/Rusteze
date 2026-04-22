@@ -1,46 +1,53 @@
-//- src/views/dashboard-employer.pug
 extends layout
 
 block content
-  h1(style="margin-bottom: 1.5rem") Mi Taller
+  .dashboard-wrapper
+    .dashboard-header
+      .dashboard-title-block
+        span.dashboard-badge PANEL DE CONTROL
+        h1.dashboard-title Mi Taller
+      .dashboard-location
+        span.location-icon ⚙
+        span= data.garage.ciudad + ' — ' + data.garage.direccion
 
-  .stat-grid
-    .stat-card
-      h3= data.totalClientes
-      p Clientes
+    .stat-grid
+      .stat-card
+        .stat-number= data.totalClientes
+        .stat-label Clientes
+        .stat-bar
 
-    .stat-card
-      h3= data.totalReparacionesActivas
-      p Reparaciones activas
+      .stat-card.stat-card--active
+        .stat-number= data.totalReparacionesActivas
+        .stat-label Reparaciones activas
+        .stat-bar
 
-  .garage-section
-    h2 🏠 #{data.garage.ciudad} — #{data.garage.direccion}
+    .dashboard-section
+      .section-header
+        h2.section-title
+          span.section-icon 🔧
+          | &nbsp;Reparaciones activas
 
-  .garage-section
-    h2 🔧 Mis reparaciones activas
+      if data.reparacionesActivas.length === 0
+        .empty-state
+          p.empty-text No hay reparaciones activas en este momento.
 
-    if data.reparacionesActivas.length === 0
-      p.empty No tienes reparaciones activas.
-
-    else
-      table
-        thead
-          tr
-            th ID
-            th Cliente
-            th Coche
-            th Matrícula
-            th Diagnóstico
-            th Fecha inicio
-            th Coste
-
-        tbody
-          each rep in data.reparacionesActivas
-            tr
-              td= rep.id
-              td= rep.cliente.nombre + ' ' + rep.cliente.apellido
-              td= rep.coche.marca + ' ' + rep.coche.modelo
-              td= rep.coche.matricula
-              td= rep.diagnostico
-              td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
-              td= rep.coste + ' €'
+      else
+        .table-wrapper
+          table.repair-table
+            thead
+              tr 
+                th Cliente
+                th Vehículo
+                th Matrícula
+                th Diagnóstico
+                th Fecha inicio
+                th Coste
+            tbody
+              each rep in data.reparacionesActivas
+                tr
+                  td= rep.cliente.nombre + ' ' + rep.cliente.apellido
+                  td= rep.coche.marca + ' ' + rep.coche.modelo
+                  td.td-plate= rep.coche.matricula
+                  td.td-diag= rep.diagnostico
+                  td= new Date(rep.fechaInicio).toLocaleDateString('es-ES')
+                  td.td-cost= rep.coste + ' €'

@@ -2,12 +2,12 @@ import { DataTypes } from "sequelize";
 import sequelize from "../config/db.js";
 
   const Task = sequelize.define('Task', {
-   id_tareas: {
+    id_tareas: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       autoIncrement: true,
     },
-   id_repair: {
+    id_repair: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

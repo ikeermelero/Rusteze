@@ -1,0 +1,84 @@
+extends layout
+
+block content
+  .service-page.pro-version
+    //- Fondo HUD sutil para mantener consistencia
+    .hud-overlay
+      .grid-pattern
+
+    header.service-hero.text-center
+      .container
+        .animate-item.delay-1
+          span.badge-racing.pro-badge [ __________ ]
+        .animate-item.delay-2
+          h1.pro-title.mt-3 INGENIERÍA DE GESTIÓN
+        .animate-item.delay-3
+          p.pro-lead.mx-auto Diseñado por mecánicos, para mecánicos. La precisión es nuestra única moneda de cambio.
+
+    section.service-grid.container.mt-5
+      .row.g-4
+
+        .col-md-4.animate-item.delay-4
+          .service-card.pro-card
+            .card-scanner
+            .card-icon
+              i.bi.bi-stopwatch-fill
+            h3 Gestión de Boxes
+            p.text-muted Control de flujo en tiempo real. Asignación de ingenieros a tareas críticas y monitoreo de telemetría de reparación.
+            .card-footer-tech STATUS: OPTIMIZED
+
+
+        .col-md-4.animate-item.delay-5
+          .service-card.pro-card
+            .card-scanner
+            .card-icon
+              i.bi.bi-clipboard2-pulse-fill
+            h3 Historial del Motor
+            p.text-muted Registro criptográfico de cada vehículo. Cada ajuste de torque y diagnóstico almacenado en la nube Rust-eze.
+            .card-footer-tech DATA: ENCRYPTED
+
+
+        .col-md-4.animate-item.delay-6
+          .service-card.pro-card
+            .card-scanner
+            .card-icon
+              i.bi.bi-box-seam-fill
+            h3 Inventario 
+            p.text-muted Logística de piezas con alertas de stock crítico. Algoritmos de predicción para que nunca falte un componente.
+            .card-footer-tech STOCK: MONITORING
+
+    section.theory-section.mt-5.py-5
+      .container.theory-container
+        .row.align-items-center
+          .col-lg-6.animate-item.delay-7
+            .theory-content
+              h2.accent-text ¿Por qué digitalizar tu taller?
+              p.text-light.opacity-75 La gestión analógica es el cuello de botella de la industria moderna. Rust-eze centraliza el flujo de trabajo para reducir tiempos muertos hasta en un 30%.
+              ul.theory-list.pro-list
+                li 
+                  i.bi.bi-lightning-charge-fill 
+                  span VELOCIDAD: Presupuestos instantáneos vía terminal.
+                li 
+                  i.bi.bi-diagram-3-fill 
+                  span ORDEN: Priorización de boxes mediante IA.
+                li 
+                  i.bi.bi-graph-up-arrow 
+                  span CRECIMIENTO: Analíticas de rendimiento de escudería.
+          .col-lg-6.animate-item.delay-8.text-center
+            .image-frame
+              .frame-border
+              img.img-fluid.rounded-0.pro-img(src="https://images.unsplash.com/photo-1504222490345-c075b6008014?q=80&w=800&auto=format&fit=crop" alt="Mecánico trabajando")
+
+    section.cta-footer.text-center.py-5.animate-item.delay-9
+      .cta-box
+        h2.mb-4 ¿Listo para encender motores?
+        a.btn-premium.pro-btn(href="/auth/register") 
+          span ACTIVAR PROTOCOLO
+          i.bi.bi-terminal.ms-2
+
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+      setTimeout(() => {
+        document.querySelector('.service-page').classList.add('active');
+      }, 100);
+    });
