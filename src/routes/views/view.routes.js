@@ -12,7 +12,7 @@ const router = Router();
 
 router.use('/', authRoutes)
 router.use('/dashboard', dashboardRoutes)
-router.use('/repairs', repairRoutes)
+//router.use('/repairs', repairRoutes)
 //router.use('/task', taskRoutes)
 //router.use('/clients', )
 //router.use('/cars', carRoutes)

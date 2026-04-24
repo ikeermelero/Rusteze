@@ -26,7 +26,7 @@ app.get("/",(req,res)=>{
     res.render("auth")
 }) 
 
-app.use("/", router)
+//app.use("/", router)
 
 
 app.use("/", router)
