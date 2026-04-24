@@ -1,17 +1,20 @@
 import authController from '../../controller/views/auth.controller.js';
 import { Router } from "express";
-import { checkCredentials } from "../../middleware/auth.middleware.js";
+import { isRegisterDataCorrect, checkCredentials } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
-
+router.get("/",(req,res)=>{ res.render("index") })
 router.get("/login", authController.viewLogin);
-router.post("/login", authController.login);
-router.get("/register", (req, res) => res.render('auth/register'));
-router.post("/register", authController.register); 
+router.get("/register",authController.viewRegister);
+router.get("/forgot",authController.viewForgot);
+
+router.post("/login", checkCredentials, authController.login);
+router.post("/register", isRegisterDataCorrect, authController.register);
+
 router.get("/logout", (req, res) => {
-    req.session.destroy();
-    res.redirect("/auth/login");
+    req.session.destroy()
+    res.redirect('/')
 });
 
 export default router;

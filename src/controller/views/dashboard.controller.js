@@ -2,17 +2,15 @@
 import dashboardService from '../../services/dashboard.service.js'
 
 export async function getDashboard(req, res) {
-    // let { id, rol } = req.user  ← descomentar cuando tengamos auth
-    let id = 1;
-    let rol = 'admin';
+     let { id, rol, id_taller } = req.session.user 
 
     try {
-        if (rol === 'admin') {
+        if (rol === 1) {
             const data = await dashboardService.getAdminDashboard(id)
             return res.render('dashboard-admin', { data })
         }
 
-        if (rol === 'mecanico') {
+        if (rol === 2) {
             const data = await dashboardService.getEmployerDashboard(id)
             return res.render('dashboard-employer', { data })
         }

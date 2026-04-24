@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { injectUserToViews } from '../middleware/auth.middleware.js'; 
+import { injectUserToViews } from '../middlewares/auth.middleware.js'; 
 import viewsRoutes from './views/view.routes.js';
-import apiRoutes from './api/api.routes.js';
+//import apiRoutes from './api/api.routes.js';
 
 const router = Router();
 
@@ -9,7 +9,7 @@ const router = Router();
 router.use(injectUserToViews); 
 
 
-router.use('/api', apiRoutes);
+//router.use('/api', apiRoutes);
 router.use('/', viewsRoutes);
 
 
