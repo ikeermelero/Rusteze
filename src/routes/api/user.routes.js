@@ -2,9 +2,9 @@ import { Router } from "express";
 import userController from "../../controller/api/user.controller.js";
 const router = Router();
 
-//router.get("/:id/clientes", userController.getAllUsersByGarageId);
+router.get("/:id/clientes", userController.getAllUsersByGarageId);
 
-
+router.post("/register", userController.registerUser);
 /* router.get("/:id", (req, res) => 
     /* const id = req.params.id
     const user = user.find(u => u.id === id)

@@ -1,15 +1,9 @@
-import { Router } from 'express'
-import carRoute from './cars.routes.js';
-import authRoute from './auth.routes.js';
+import { Router } from 'express';
+import authRoutes from './auth.routes.js';
 
-const router = Router()
+const router = Router();
 
-router.use('/auth', authRoutes)
-router.use('/dashboard', dashboardRoutes)
-router.use('/repairs', repairRoutes)
-router.use('/clients', )
-router.use('/cars', carRoutes)
+// Esto crea las rutas /auth/login, /auth/registro, etc.
+router.use('/auth', authRoutes);
 
-
-
-export default router
+export default router;
