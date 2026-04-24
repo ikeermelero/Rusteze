@@ -3,34 +3,53 @@ import bcrypt from "bcryptjs";
 import authService from "../../services/auth.service.js";
 
 async function viewLogin(req, res) {
-    
-    res.render('auth', { error: null }); 
+  res.render("auth", { mode: "login" });
+}
+async function viewRegister(req, res) {
+  res.render("auth", { mode: "register" });
+}
+async function viewForgot(req, res) {
+  res.render("auth", { mode: "forgot" });
 }
 
 async function login(req, res) {
-    try {
-        const { email, password } = req.body;
-        
-        const user = await authService.login(email, password);
-        res.redirect("/views/dashboard"); 
-    } catch (e) {
-       
-        res.render("auth", { error: e.message });
-    }
+  try {
+    //const token = authService.createToken(req.user);
+
+    req.session.user = {
+                id:       req.user.id_user,
+                nombre:   req.user.name,
+                email:    req.user.email,
+                rol:      req.user.id_role,
+                id_taller: req.user.id_taller
+            }
+    res.redirect("/dashboard");
+  } catch (e) {
+    res.render("errors/500", { message: e.message });
+  }
 }
 
 async function register(req, res) {
-    try {
-        await authService.register(req.body);
-        res.redirect('/auth/login?registered=true');
-    } catch (e) {
-        res.render("auth", { error: e.message });
-    }
+  try {
+    const user = await authService.register(req.registerData);
+    req.session.user = {
+            id:        user.id_user,
+            rol:       user.id_role,
+            id_taller: user.id_taller,
+            nombre:    user.name,
+            email:     user.email,
+        }
+
+    res.redirect("/dashboard");
+  } catch (e) {
+    res.render("errors/500", { message: e.message });
+  }
 }
 
-
 export default {
-    viewLogin,
-    login,
-    register
+  viewLogin,
+  viewRegister,
+  viewForgot,
+  login,
+  register,
 };

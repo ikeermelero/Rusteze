@@ -16,22 +16,22 @@ block content
 
     .auth-body
       if mode == 'login'
-        form#loginForm(action="/views/login" method="POST")
+        form#loginForm(action="/login" method="POST")
           .input-group
             label(for="email") Correo Electrónico
             input#email(type="email" name="email" required placeholder="rayo@mcqueen.com")
           .input-group
             label(for="password") Contraseña
-            input#password(type="password" name="password_hash" required placeholder="••••••••")
+            input#password(type="password" name="password" required placeholder="••••••••")
           button.btn-primary(type="submit") Encender Motores
           .form-options
             p ¿Nuevo? 
-              a(href="/auth/register") Regístrate
+              a(href="/register") Regístrate
             p
-              a(href="/auth/forgot") ¿Olvidaste la clave?
+              a(href="/forgot") ¿Olvidaste la clave?
 
       else if mode == 'register'
-        form#registerForm(action="/views/register" method="POST")
+        form#registerForm(action="/register" method="POST")
           .input-group
             label(for="name") Nombre
             input#name(type="text" name="name" required placeholder="Ej. Rayo")
@@ -43,23 +43,23 @@ block content
             input#email(type="email" name="email" required placeholder="tu@correo.com")
           .input-group
             label(for="password") Contraseña
-            input#password(type="password" name="password_hash" required placeholder="Mínimo 8 caracteres")
+            input#password(type="password" name="password" required placeholder="Mínimo 8 caracteres")
             label(for="passwordRepeat") Repetir Contraseña
             input#passwordRepeat(type="password" name="passwordRepeat" required placeholder="Mínimo 8 caracteres")
           button.btn-primary(type="submit") Unirse a la Escudería
           .form-options
             p
-              a(href="/auth/login") Ya tengo cuenta, volver al garage
+              a(href="/login") Ya tengo cuenta, volver al garage
       
       else if mode == 'forgot'
-        form#forgotForm(action="/views/forgot" method="POST")
+        form#forgotForm(action="/forgot" method="POST")
           .input-group
             label(for="email") Tu Correo de Mecánico
             input#email(type="email" name="email" required placeholder="mecanico@rusteze.com")
           button.btn-primary(type="submit") Enviar Auxilio Vial
           .form-options
             p
-              a(href="/auth/login") Volver al Garage y reintentar logueo
+              a(href="/login") Volver al Garage y reintentar logueo
 
     if error
       p.error-message= error

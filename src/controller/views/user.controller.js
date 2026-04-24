@@ -4,7 +4,6 @@ import User from "../../models/user.model.js";
 
 export async function getAllUsersByGarageId(req, res) {
     try {
-        console.log("User Controller - Buscando taller ID:", req.params.id);
         const users = await userService.getAllUsersByGarageId(req.params.id);
         return res.status(200).json(users);
     } catch (e) {
