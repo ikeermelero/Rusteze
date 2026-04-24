@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize'
 import dotenv from 'dotenv'
+//import Role from '../models/role.model.js';
 
 dotenv.config();
 
@@ -31,13 +32,40 @@ export async function checkDB(){
     }
 }
 
-export async function syncDB(){
+export async function syncDB() {
     try {
-        
-        await sequelize.sync({ alter: true })
-        console.log("base de datos sincronizada")
+        await sequelize.sync({ alter: true });
+        console.log("base de datos sincronizada");
+
+        // 1. Importamos los modelos dinámicamente para evitar el ReferenceError
+        const { default: Role } = await import('../models/role.model.js');
+        const { default: Garage } = await import('../models/garage.model.js'); 
+        // Nota: He puesto 'Garage' porque en tu imagen_450689.jpg veo 'garage.model.js'. 
+        // Si tu modelo se llama Taller, cámbialo aquí.
+
+        // 2. Crear Roles si no existen
+        const rolesCount = await Role.count();
+        if (rolesCount === 0) {
+            await Role.bulkCreate([
+                { id_role: 1, name: 'admin' },
+                { id_role: 2, name: 'user' }
+            ]);
+            console.log("✅ Roles iniciales creados");
+        }
+
+        // 3. Crear Taller/Garage inicial si no existe
+        const garageCount = await Garage.count();
+        if (garageCount === 0) {
+            await Garage.create({
+                id_taller: 1, // El ID que Luis está buscando
+                name: 'Taller Rusteze Principal'
+                // Añade aquí más campos si tu modelo los requiere obligatoriamente
+            });
+            console.log("✅ Taller inicial creado");
+        }
+
     } catch (error) {
-        console.error("no se ha podido sincronizar",error);
+        console.error("no se ha podido sincronizar", error);
     }
 }
 

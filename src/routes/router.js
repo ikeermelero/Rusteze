@@ -1,11 +1,20 @@
-import { Router } from 'express'
-import apiRoutes from './api/api.routes.js'
-import viewsRoutes from './views/view.routes.js'
+import { Router } from 'express';
+import { injectUserToViews } from '../middleware/auth.middleware.js'; 
+import viewsRoutes from './views/view.routes.js';
+import apiRoutes from './api/api.routes.js';
 
-const router = Router()
-
-router.use('/api', apiRoutes)
-router.use('/', viewsRoutes)
+const router = Router();
 
 
-export default router
+router.use(injectUserToViews); 
+
+
+router.use('/api', apiRoutes);
+router.use('/', viewsRoutes);
+
+
+router.get('/test-status', (req, res) => {
+    res.status(200).send("El servidor está vivito y coleando");
+});
+
+export default router;

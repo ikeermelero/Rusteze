@@ -1,12 +1,14 @@
 import { Router } from 'express'
-//import carRoute from './cars.routes.js';
-import authRoutes from './auth.routes.js';
+// import carRoutes from './cars.routes.js'; 
+import authRoutes from './auth.routes.js'; 
 import dashboardRoutes from './dashboard.routes.js';
-import repairRoutes from './repair.routes.js';
-//import taskRoutes from './task.routes.js';
+import clientRoutes from './client.routes.js';
+//import repairRoutes from './repair.routes.js';
+//import { isLoggedIn,requireAdmin,requireRole } from "../../middlewares/authiddleware.js";
 
 
-const router = Router()
+const router = Router();
+
 
 router.use('/', authRoutes)
 router.use('/dashboard', dashboardRoutes)
@@ -23,4 +25,4 @@ router.get('/servicios', (req, res) => {
     res.render('service'); 
 });
 
-export default router
+export default router;

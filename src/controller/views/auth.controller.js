@@ -1,32 +1,36 @@
+import User from "../../models/user.model.js";
+import bcrypt from "bcryptjs";
+import authService from "../../services/auth.service.js";
 
-export async function viewLogin(req, res) {
-    return res.render('auth');
+async function viewLogin(req, res) {
+    
+    res.render('auth', { error: null }); 
 }
 
-export async function login  (req, res){
-   res.redirect("/dashboard")
+async function login(req, res) {
+    try {
+        const { email, password } = req.body;
+        
+        const user = await authService.login(email, password);
+        res.redirect("/views/dashboard"); 
+    } catch (e) {
+       
+        res.render("auth", { error: e.message });
+    }
+}
+
+async function register(req, res) {
+    try {
+        await authService.register(req.body);
+        res.redirect('/auth/login?registered=true');
+    } catch (e) {
+        res.render("auth", { error: e.message });
+    }
+}
+
+
+export default {
+    viewLogin,
+    login,
+    register
 };
-
-export async function register  (req, res){
-   res.redirect("/dashboard")
-};
-
-export default { viewLogin, login }
-export async function viewLogin(req, res) {
-    return res.render("auth", {mode: 'login'});
-}
-export async function viewRegister(req, res) {
-    return res.render("auth", {mode: 'register'});
-}
-export async function viewForgot(req, res) {
-    return res.render("auth", {mode: 'forgot'});
-}
-
-export async function viewService(req, res) {
-    return res.render("service", {mode: 'service'});
-}
-
-
-
-
-export default {viewLogin, viewRegister, viewForgot, viewService}

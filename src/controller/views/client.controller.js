@@ -2,7 +2,7 @@ import clientService from "../../services/client.service.js";
 
 export async function getClientDashboard(req, res) {
   // let { id,} = req.user  ← descomentar cuando tengamos auth
-  let id = 3;
+  let id = 1;
   try {
     const data = await clientService.getClientDashboard(id);
     return res.render("dashboard-client", { data });

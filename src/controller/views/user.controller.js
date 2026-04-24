@@ -1,9 +1,10 @@
 import userService from "../../services/user.service.js";
+import User from "../../models/user.model.js";
 
-//Sacar todos los usuarios (cliente) por id de taller
-async function getAllUsersByGarageId(req, res) {
+
+export async function getAllUsersByGarageId(req, res) {
     try {
-        console.log("User Controller:", req.params.id);
+        console.log("User Controller - Buscando taller ID:", req.params.id);
         const users = await userService.getAllUsersByGarageId(req.params.id);
         return res.status(200).json(users);
     } catch (e) {
@@ -11,6 +12,34 @@ async function getAllUsersByGarageId(req, res) {
     }
 }
 
-export default{
-  getAllUsersByGarageId,
+
+export async function createUser(req, res) {
+    try {
+       
+        const { name, surname, email, password_hash, phone } = req.body;
+        
+        await User.create({
+            name,
+            surname,
+            email,
+            password_hash, 
+            phone,
+            id_role: 2,    
+            id_taller: 1   
+        });
+
+        
+        res.redirect('/auth/login?registered=true');
+        
+    } catch (error) {
+        console.error("Error al crear usuario:", error);
+        
+        res.status(500).send("Error al registrarse. Posible email duplicado.");
+    }
+}
+
+
+export default {
+    getAllUsersByGarageId,
+    createUser
 };
