@@ -3,7 +3,7 @@ import { Router } from 'express'
 import authRoutes from './auth.routes.js'; 
 import dashboardRoutes from './dashboard.routes.js';
 import clientRoutes from './client.routes.js';
-//import repairRoutes from './repair.routes.js';
+import repairRoutes from './repair.routes.js';
 //import { isLoggedIn,requireAdmin,requireRole } from "../../middlewares/authiddleware.js";
 
 
@@ -12,7 +12,7 @@ const router = Router();
 
 router.use('/', authRoutes)
 router.use('/dashboard', dashboardRoutes)
-//router.use('/repairs', repairRoutes)
+router.use('/repairs', repairRoutes)
 //router.use('/task', taskRoutes)
 //router.use('/clients', )
 //router.use('/cars', carRoutes)
