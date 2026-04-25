@@ -37,8 +37,23 @@ export async function createUser(req, res) {
     }
 }
 
+function showLogin(req, res) {
+    res.render('auth', { mode: 'login' });
+}
+
+function showRegister(req, res) {
+    res.render('auth', { mode: 'register' });
+}
+
+function showForgot(req, res) {
+    res.render('auth', { mode: 'forgot' });
+}
+
 
 export default {
     getAllUsersByGarageId,
-    createUser
+    createUser,
+    showLogin,
+    showRegister,
+    showForgot
 };

@@ -16,3 +16,4 @@ router.use('/task',isLoggedIn, taskRoutes)
 router.use('/client',isLoggedIn , clientRoutes )
 
 export default router;
+export default router;
