@@ -3,7 +3,7 @@ import { Router } from 'express'
 //import authRoute from './auth.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import repairRoutes from './repair.routes.js';
-//import taskRoutes from './task.routes.js';
+import taskRoutes from './task.routes.js';
 
 
 const router = Router()
@@ -11,7 +11,7 @@ const router = Router()
 //router.use('/auth', authRoute)
 router.use('/dashboard', dashboardRoutes)
 router.use('/repairs', repairRoutes)
-//router.use('/task', taskRoutes)
+router.use('/task', taskRoutes)
 //router.use('/clients', )
 //router.use('/cars', carRoutes)
 

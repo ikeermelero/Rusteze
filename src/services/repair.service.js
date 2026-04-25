@@ -28,7 +28,7 @@ async function findRepairById(id) {
             },
             {
                 model: taskModel,
-                attributes: ['name']
+                attributes: ['id_tareas', 'name', 'status', 'description', 'cost']
             }
         ]
     });

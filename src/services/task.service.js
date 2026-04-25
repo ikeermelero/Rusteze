@@ -1,4 +1,4 @@
-import {} from "../models/index.js";
+import { taskModel } from "../models/index.js";
 
 
 
@@ -6,6 +6,13 @@ import {} from "../models/index.js";
 
 } */
 
-export default {
-    
+async function updateTaskStatus(id_tareas, status) {
+    return await taskModel.update(
+        { status },
+        { where: { id_tareas } }
+    );
 }
+
+export default {
+    updateTaskStatus
+};
