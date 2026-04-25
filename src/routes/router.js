@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { injectUserToViews } from '../middleware/auth.middleware.js'; 
 import viewsRoutes from './views/view.routes.js';
 import apiRoutes from './api/api.routes.js';
+import reservationRoutes from "./views/reservation.routes.js";
 
 const router = Router();
 
@@ -11,6 +12,7 @@ router.use(injectUserToViews);
 
 router.use('/api', apiRoutes);
 router.use('/', viewsRoutes);
+router.use('/views/reservations', reservationRoutes);
 
 
 router.get('/test-status', (req, res) => {

@@ -1,0 +1,66 @@
+extends layout
+
+block content
+  .container.mt-4
+    .d-flex.justify-content-between.align-items-center.mb-4
+      h1 📅 Gestión de Reservas
+      button.btn.btn-primary(data-bs-toggle="modal" data-bs-target="#modalReserva") + Nueva Reserva
+
+    .card.shadow-sm
+      .card-body
+        if reservations && reservations.length > 0
+          table.table.table-hover
+            thead.table-dark
+              tr
+                th ID
+                th Coche (Matrícula)
+                th Cliente
+                th Fecha Entrada
+                th Estado
+                th Acciones
+            tbody
+              each res in reservations
+                tr
+                  td= res.id_reservation
+                  td= res.Car ? `${res.Car.brand} ${res.Car.model} (${res.Car.license_plate})` : 'Sin asignar'
+                  td= user ? `${user.name} ${user.surname}` : 'N/A'
+                  td= new Date(res.start_date).toLocaleDateString()
+                  td
+                    span.badge(class=res.status === 'CONFIRMED' || res.status === 'CONFIRMADA' ? 'bg-success' : 'bg-warning')= res.status
+                  td.d-flex
+                    
+                    button.btn.btn-sm.btn-outline-info.me-2(title="Editar") 
+                    
+                    form(action=`/views/reservations/delete/${res.id_reservation}` method="POST" onsubmit="return confirm('¿Estás seguro de eliminar esta reserva?')")
+                      button.btn.btn-sm.btn-outline-danger(type="submit" title="Eliminar") 
+        else
+          .text-center.py-5
+            p.text-muted No hay reservas registradas actualmente.
+
+  .modal.fade#modalReserva(tabindex="-1" aria-hidden="true")
+    .modal-dialog
+      .modal-content
+        .modal-header.bg-primary.text-white
+          h5.modal-title  Nueva Reserva
+          button.btn-close(type="button" data-bs-dismiss="modal" aria-label="Close")
+        .modal-body
+          form(action="/views/reservations" method="POST")
+            .mb-3
+              label.form-label Seleccionar Coche
+              select.form-select(name="id_car" required)
+                option(value="" disabled selected) Elija un coche...
+                if cars
+                  each car in cars
+                    option(value=car.id_car)= `${car.brand} ${car.model} (${car.license_plate})`
+            
+            .mb-3
+              label.form-label Fecha de Entrada
+              input.form-control(type="date" name="start_date" required)
+            
+            .mb-3
+              label.form-label Notas
+              textarea.form-control(name="description" rows="2")
+
+            .modal-footer.px-0.pb-0
+              button.btn.btn-secondary(type="button" data-bs-dismiss="modal") Cancelar
+              button.btn.btn-primary(type="submit") Crear Reserva

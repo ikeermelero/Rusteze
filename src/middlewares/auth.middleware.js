@@ -2,6 +2,7 @@ import authService from "../services/auth.service.js";
 import bcrypt from "bcryptjs";
 
 
+
 async function isRegisterDataCorrect(req, res, next) {
     const { name, surname, email, password_hash, passwordRepeat, phone } = req.body;
 
