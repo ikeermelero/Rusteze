@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  .container.mt-5
+    //- Cabecera: ID de la reparación y botones de acción
+    .d-flex.justify-content-between.align-items-center.mb-4
+      div
+        h1 Reparación ##{repair.id_repair}
+        if repair.status === 'IN_PROGRESS'
+          span.badge.bg-warning.text-dark En curso
+        else
+          span.badge.bg-success Finalizada
+      a.btn.btn-outline-secondary(href="/repairs") Volver
+
+    .row
+      //- Panel de información lateral (Coche y Cliente)
+      .col-md-4
+        .card.shadow-sm.mb-4
+          .card-header.bg-dark.text-white: h6.mb-0 Vehículo
+          .card-body
+            //- Acceso a través de las asociaciones de tu SELECT
+            p.mb-1: strong #{repair.Car.brand} #{repair.Car.model}
+            span.badge.bg-light.text-dark.border #{repair.Car.plate}
+        
+        .card.shadow-sm
+          .card-header.bg-primary.text-white: h6.mb-0 Cliente
+          .card-body
+            p.mb-1: strong #{repair.Car.User.name} #{repair.Car.User.surname}
+            p.small.text-muted.mb-0 Tel: #{repair.Car.User.phone}
+
+      //- Listado de Tareas (La parte que cambia el estado individualmente)
+      .col-md-8
+        .card.shadow-sm
+          .card-header.bg-white: h5.mb-0 Tareas asignadas
+          .table-responsive
+            table.table.table-hover.align-middle.mb-0
+              thead.table-light
+                tr
+                  th Descripción
+                  th(style="width: 200px") Estado
+              tbody
+                if repair.Tasks && repair.Tasks.length > 0
+                  each task in repair.Tasks
+                    tr
+                      td
+                        div.fw-bold= task.name
+
+                      td
+                        - const currentId = task.id_tareas || task.ID_TAREAS 
+                        
+                        if currentId
+                          form(action=`/task/${currentId}/update-status` method="POST")
+                            input(type="hidden" name="idRepair" value=repair.id_repair)
+                            select.form-select.form-select-sm(name="status" onchange="this.form.submit()")
+                              option(value="PENDING" selected=task.status === 'PENDING') Pendiente
+                              option(value="IN_PROGRESS" selected=task.status === 'IN_PROGRESS') En curso
+                              option(value="DONE" selected=task.status === 'DONE') Terminada
+                        else
+                          span.badge.bg-danger Error: ID No encontrado
