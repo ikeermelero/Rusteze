@@ -5,9 +5,9 @@ const reservationController = {
     viewReservations: async (req, res) => {
         try {
             const reservations = await reservationService.getReservationsWithCars();
-            const cars = await Car.findAll(); // Podrías llevar esto a un carService después
+            const cars = await Car.findAll(); 
             
-            res.render("reservations", { 
+            res.render("reservation", { 
                 reservations,
                 cars, 
                 user: req.session.user
@@ -28,7 +28,7 @@ const reservationController = {
 
             await reservationService.create({ id_car, start_date, description });
 
-            res.redirect("/views/reservations");
+            res.redirect("/reservations");
         } catch (error) {
             console.error("Create Error:", error);
             res.status(500).send("Error al crear la reserva.");
@@ -39,7 +39,7 @@ const reservationController = {
         try {
             const { id } = req.params;
             await reservationService.delete(id);
-            res.redirect("/views/reservations");
+            res.redirect("/reservations");
         } catch (error) {
             console.error("Delete Error:", error);
             res.status(500).send("No se pudo eliminar la reserva");

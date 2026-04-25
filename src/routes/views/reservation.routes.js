@@ -4,8 +4,8 @@ import { isLoggedIn } from "../../middlewares/auth.middleware.js";
 
 const router = Router();
 
-router.get("/", isLoggedIn, reservationController.viewReservations);
-router.post("/", isLoggedIn, reservationController.createReservation);
-router.post("/delete/:id", isLoggedIn, reservationController.deleteReservation);
+router.get("/", reservationController.viewReservations);
+router.post("/", reservationController.createReservation);
+router.post("/delete/:id", reservationController.deleteReservation);
 
 export default router;

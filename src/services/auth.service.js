@@ -23,9 +23,7 @@ async function login(email, password) {
 async function register(userData) {
     const { name, surname, email, password_hash, phone } = userData
     try {
-       
-        const hashedPassword = await bcrypt.hash(password, 10);
-
+        //const hashedPassword = await bcrypt.hash(password, 10);
         const userCreated = await userModel.create({
             name, surname, email, password_hash, phone,
             id_role: 1,
