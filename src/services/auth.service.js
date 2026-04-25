@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { userModel } from '../models/index.js'
 
-
 const getUserByEmail = async (email) => {
     return await userModel.findOne({ where: { email: email } }); 
 };
@@ -24,6 +23,9 @@ async function login(email, password) {
 async function register(userData) {
     const { name, surname, email, password_hash, phone } = userData
     try {
+       
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const userCreated = await userModel.create({
             name, surname, email, password_hash, phone,
             id_role: 1,

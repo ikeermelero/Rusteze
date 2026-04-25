@@ -11,6 +11,7 @@ router.use(injectUserToViews);
 
 //router.use('/api', apiRoutes);
 router.use('/', viewsRoutes);
+router.use('/views/reservations', reservationRoutes);
 
 
 router.get('/test-status', (req, res) => {
