@@ -1,4 +1,4 @@
-extends layout
+extends dashboard/layout-dashboard
 
 block content
   .dashboard-wrapper
@@ -44,7 +44,7 @@ block content
     .dashboard-section
       .section-header
         h2.section-title
-          span.section-icon 🔧
+          span.section-icon 
           | &nbsp;Reparaciones activas
       if data.reparacionesActivas.length === 0
         .empty-state
@@ -76,7 +76,7 @@ block content
     .dashboard-section(style="margin-top: 1.5rem")
       .section-header
         h2.section-title
-          span.section-icon 👥
+          span.section-icon 
           | &nbsp;Clientes del taller
       if data.clientes.length === 0
         .empty-state

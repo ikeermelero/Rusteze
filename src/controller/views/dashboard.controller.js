@@ -15,7 +15,7 @@ export async function getDashboard(req, res) {
             return res.render('dashboard-employer', { data })
         }
 
-        // Si el rol no coincide con ninguno
+     
         return res.status(403).render('errors/404')
 
     } catch (error) {

@@ -12,8 +12,6 @@ async function getRepairById(req, res) {
     res.render('repairDetail', { repair });
 }
 
-
-
 export default {
     getAllRepairs,
     getRepairById

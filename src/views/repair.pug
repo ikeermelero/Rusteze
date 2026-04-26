@@ -1,20 +1,41 @@
 extends layout
 
 block content
-  h1 Lista de Reparaciones
-  table
-    thead
-      tr
-        th ID
-        th Coche
-        th Matrícula
-        th Cliente
-    tbody
-      each r in repairs
-        tr
-          td= r.id_repair
-          td= `${r.Car.brand} ${r.Car.model}`
-          td= r.Car.plate
-          td= `${r.Car.User.name} ${r.Car.User.surname}`
-          td
-            a.btn.btn-primary(href=`/repairs/${r.id_repair}`) Ver detalle
+  main
+    .dashboard-wrapper
+      .dashboard-header
+        div
+          span.dashboard-badge REPAIR SYSTEM 
+          h1.dashboard-title Lista de Reparaciones
+        .dashboard-location
+          span.location-icon 🔧
+          span Total: #{repairs.length} registros
+
+      .dashboard-section
+        .section-header
+          h2.section-title
+            span.section-icon 📋
+            | Reparaciones
+        if repairs && repairs.length > 0
+          .table-wrapper
+            table.repair-table
+              thead
+                tr
+                  th ID
+                  th Vehículo
+                  th Matrícula
+                  th Cliente
+                  th Acción
+              tbody
+                each r in repairs
+                  tr
+                    td.td-id= `#${r.id_repair}`
+                    td= `${r.Car.brand} ${r.Car.model}`
+                    td
+                      span.td-plate= r.Car.plate
+                    td= `${r.Car.User.name} ${r.Car.User.surname}`
+                    td
+                      a.btn-premium(href=`/repairs${r.id_repair}` style="padding: 0.4rem 1rem; font-size: 0.75rem;") Ver detalle
+        else
+          .empty-state
+            p.empty-text No hay reparaciones registradas aún.
