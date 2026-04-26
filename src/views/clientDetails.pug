@@ -1,41 +1,54 @@
-extends layout
+extends dashboard/layout-dashboard
 
 block content
-  .garage-section
-    h2 👤 Detalle del cliente
+  .client-details-wrapper
 
-    .stat-grid
-      .stat-card
-        h3= data.client.name + ' ' + data.client.surname
-        p Nombre completo
+    .client-details-header
+      .client-details-header-left
+        span.client-details-badge  TALLER — CLIENTE
+        h1.client-details-title  Detalle del cliente
+      a.btn-back(href='/client') ← Volver
 
-      .stat-card
-        h3= data.client.email
-        p Email
+    .client-stat-grid
+      .client-stat-card
+        .client-stat-value= data.client.name + ' ' + data.client.surname
+        .client-stat-label Nombre completo
+        .client-stat-bar
 
-      .stat-card
-        h3= data.cars.length
-        p Coches registrados
+      .client-stat-card
+        .client-stat-value= data.client.email
+        .client-stat-label Email
+        .client-stat-bar
 
-  .garage-section
-    h2 🚗 Coches del cliente
+      .client-stat-card.client-stat-card--highlight
+        .client-stat-value= data.cars.length
+        .client-stat-label Coches registrados
+        .client-stat-bar
 
-    if data.cars.length === 0
-      p.empty Este cliente no tiene coches registrados.
+    .garage-section
+      .garage-section-header
+        h2.garage-section-title 🚗 Coches del cliente
+        if data.cars.length > 0
+          span.garage-cars-count #{data.cars.length} vehículo(s)
 
-    else
-      table
-        thead
-          tr
-            th ID
-            th Marca
-            th Modelo
-            th Año
+      if data.cars.length === 0
+        .garage-empty
+          p.empty-text Este cliente no tiene coches registrados.
 
-        tbody
-          each car in data.cars
-            tr
-              td= car.id_car
-              td= car.brand
-              td= car.model
-              td= car.year
+      else
+        .cars-table-wrapper
+          table.cars-table
+            thead
+              tr
+                th ID
+                th Marca
+                th Modelo
+                th Año
+            tbody
+              each car in data.cars
+                tr
+                  td.td-car-id= car.id_car
+                  td.td-car-brand= car.brand
+                  td.td-car-model= car.model
+                  td
+                    span.td-car-year= car.year
