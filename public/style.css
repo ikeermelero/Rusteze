@@ -1283,3 +1283,15 @@ form {
         flex-direction: column;
     }
 }
+
+.status-completed {
+    background: rgba(0, 163, 50, 0.15);
+    color: #4cd97b;
+    border: 1px solid rgba(0, 163, 50, 0.5);
+    /* mismas propiedades base que .status-badge */
+}
+.status-progress {
+    background: rgba(163, 130, 0, 0.15);
+    color: #ffd60a;
+    border: 1px solid rgba(163, 130, 0, 0.5);
+}

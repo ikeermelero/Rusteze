@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", repairController.getAllRepairs);
 
-//router.get("/create", repairController.renderCreateForm);
+router.get("/create", repairController.renderCreateForm);
 
 router.get("/:id", repairController.getRepairById);
 

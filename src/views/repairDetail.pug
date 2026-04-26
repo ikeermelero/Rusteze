@@ -1,58 +1,75 @@
 extends layout
 
 block content
-  .container.mt-4
-    h1 Detalles de la Reparación ##{repair.id_repair}
-    hr
-    
-    .row
-      .col-md-6
-        h3 Información del Vehículo
-        p 
-          strong Marca: 
-          | #{repair.Car.brand}
-        p 
-          strong Modelo: 
-          | #{repair.Car.model}
-        p 
-          strong Matrícula: 
-          | #{repair.Car.plate}
-      
-      .col-md-6
-        h3 Cliente
-        p 
-          strong Nombre: 
-          | #{repair.Car.User.name} #{repair.Car.User.surname}
+  main
+    .dashboard-wrapper
+      .dashboard-header
+        div
+          span.dashboard-badge // REPAIR SYSTEM //
+          h1.dashboard-title Reparación ##{repair.id_repair}
+        a.btn-outline(href="/repairs") 
 
-    .row.mt-4
-      .col-12
-        h3 Estado de la Reparación
-        
-        - var statusClass = repair.status === 'COMPLETED' ? 'bg-success' : (repair.status === 'IN_PROGRESS' ? 'bg-warning text-dark' : 'bg-secondary')
-        
-        span.badge(class=statusClass)
-          | #{repair.status}
-          
-        p.mt-2
-          strong Diagnóstico: 
-          | #{repair.diagnosis}
+      .row.mb-4
+        .col-md-6.mb-3
+          .dashboard-section
+            .section-header
+              h2.section-title
+                span.section-icon 🚗
+                | Información del Vehículo
+            .p-4
+              table.repair-table
+                tbody
+                  tr
+                    td.td-id Marca
+                    td= repair.Car.brand
+                  tr
+                    td.td-id Modelo
+                    td= repair.Car.model
+                  tr
+                    td.td-id Matrícula
+                    td
+                      span.td-plate= repair.Car.plate
 
-    hr
-    
-    .row.mt-4
-      .col-12
-        h3 Tareas Asociadas
+        .col-md-6.mb-3
+          .dashboard-section
+            .section-header
+              h2.section-title
+                span.section-icon 👤
+                | Cliente
+            .p-4
+              table.repair-table
+                tbody
+                  tr
+                    td.td-id Nombre
+                    td= `${repair.Car.User.name} ${repair.Car.User.surname}`
+
+      .dashboard-section.mb-4
+        .section-header
+          h2.section-title
+            span.section-icon ⚙️
+            | Estado de la Reparación
+        .p-4
+          - var statusClass = repair.status === 'COMPLETED' ? 'status-badge status-completed' : (repair.status === 'IN_PROGRESS' ? 'status-badge status-progress' : 'status-badge status-active')
+          span(class=statusClass)= repair.status
+          p.mt-3
+            span.td-id Diagnóstico: &nbsp;
+            span.text-muted= repair.diagnosis
+
+      .dashboard-section
+        .section-header
+          h2.section-title
+            span.section-icon 🔧
+            | Tareas Asociadas
         if repair.Tasks && repair.Tasks.length > 0
-          table.table.table-hover
-            thead.table-light
-              tr
-                th Name
-            tbody
-              each task in repair.Tasks
-                tr 
-                  td= task.name 
+          .table-wrapper
+            table.repair-table
+              thead
+                tr
+                  th Tarea
+              tbody
+                each task in repair.Tasks
+                  tr
+                    td= task.name
         else
-          .alert.alert-info No hay tareas registradas para esta reparación todavía.
-    
-    .mt-4
-      a.btn.btn-secondary(href="/repairs") Volver al listado
+          .empty-state
+            p.empty-text No hay tareas registradas para esta reparación todavía.
