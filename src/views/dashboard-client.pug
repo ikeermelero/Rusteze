@@ -1,29 +1,41 @@
 extends layout
 
 block content
-  .garage-section
-    h2 👥 Clientes del taller
+  .clients-wrapper
+
+    .clients-header
+      .clients-header-left
+        span.clients-badge // TALLER — CLIENTES
+        h1.clients-title 👥 Clientes del taller
+      if data.totalClientes > 0
+        .clients-count
+          span= data.totalClientes
+          | &nbsp;clientes registrados
 
     if data.totalClientes === 0
-      p.empty No hay clientes registrados en este taller.
+      .clients-empty
+        p.empty-text No hay clientes registrados en este taller.
 
     else
-      p.mb-2 Total: #{data.totalClientes} clientes
+      .clients-section
+        .clients-section-header
+          h2.clients-section-title Listado de clientes
 
-      table
-        thead
-          tr
-            th ID
-            th Nombre
-            th Apellido
-            th Email
-
-        tbody
-          each cliente in data.clientes
-            tr
-              td= cliente.id_user
-              td= cliente.name
-              td= cliente.surname
-              td= cliente.email
-              td 
-                a.btn.btn-sm.btn-primary(href=`/client/${cliente.id_user}`) Ver detalles
+        .clients-table-wrapper
+          table.clients-table
+            thead
+              tr
+                th ID
+                th Nombre
+                th Apellido
+                th Email
+                th Acciones
+            tbody
+              each cliente in data.clientes
+                tr
+                  td.td-client-id= cliente.id_user
+                  td.td-client-name= cliente.name
+                  td.td-client-surname= cliente.surname
+                  td.td-client-email= cliente.email
+                  td
+                    a.btn-detail(href=`/client/${cliente.id_user}`) Ver detalles

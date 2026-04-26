@@ -2,7 +2,9 @@
 import dashboardService from '../../services/dashboard.service.js'
 
 export async function getDashboard(req, res) {
-     let { id, rol, id_taller } = req.session.user 
+    // let { id, rol } = req.user  ← descomentar cuando tengamos auth
+    let id = 1;
+    let rol = 'admin';
 
     try {
         if (rol === 1) {
@@ -15,7 +17,7 @@ export async function getDashboard(req, res) {
             return res.render('dashboard-employer', { data })
         }
 
-        // Si el rol no coincide con ninguno
+     
         return res.status(403).render('errors/404')
 
     } catch (error) {

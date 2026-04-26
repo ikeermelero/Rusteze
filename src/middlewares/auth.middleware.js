@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from 'jsonwebtoken'
 
 
+
 async function isRegisterDataCorrect(req, res, next) {
     try {
         const { name, surname, email, password, passwordRepeat, phone } = req.body

@@ -1,0 +1,110 @@
+extends layout
+
+block content
+  main
+    .dashboard-wrapper
+      .dashboard-header
+        div
+          span.dashboard-badge // RESERVATION SYSTEM //
+          h1.dashboard-title Gestión de Reservas
+        button.btn-premium(
+          data-bs-toggle="modal"
+          data-bs-target="#modalReserva"
+          style="align-self: center; border: none; cursor: pointer;"
+        ) + Nueva Reserva
+
+      .dashboard-section
+        .section-header
+          h2.section-title
+            span.section-icon 📅
+            | Reservas
+        if reservations && reservations.length > 0
+          .table-wrapper
+            table.repair-table
+              thead
+                tr
+                  th ID
+                  th Vehículo
+                  th Cliente
+                  th Fecha Entrada
+                  th Estado
+                  th Acciones
+              tbody
+                each res in reservations
+                  tr
+                    td.td-id= `#${res.id_reservation}`
+                    td
+                      if res.Car
+                        span= `${res.Car.brand} ${res.Car.model} `
+                        span.td-plate= res.Car.license_plate
+                      else
+                        span.td-diag Sin asignar
+                    td= user ? `${user.name} ${user.surname}` : 'N/A'
+                    td= new Date(res.start_date).toLocaleDateString()
+                    td
+                      - var isConfirmed = res.status === 'CONFIRMED' || res.status === 'CONFIRMADA'
+                      span.status-badge(class=isConfirmed ? 'status-completed' : 'status-active')= res.status
+                    td(style="display: flex; gap: 0.5rem; align-items: center;")
+                      button.btn-outline(
+                        title="Editar"
+                        style="padding: 0.3rem 0.8rem; font-size: 0.72rem; border-color: rgba(255,255,255,0.3);"
+                      ) ✏️ Editar
+                      form(
+                        action=`/views/reservations/delete/${res.id_reservation}`
+                        method="POST"
+                        onsubmit="return confirm('¿Estás seguro de eliminar esta reserva?')"
+                      )
+                        button.btn-premium(
+                          type="submit"
+                          title="Eliminar"
+                          style="padding: 0.3rem 0.8rem; font-size: 0.72rem; background: transparent; border: 1px solid rgba(163,0,0,0.6); cursor: pointer;"
+                        ) 🗑️ Eliminar
+        else
+          .empty-state
+            p.empty-text No hay reservas registradas actualmente.
+
+  //- MODAL NUEVA RESERVA
+  .modal.fade#modalReserva(tabindex="-1" aria-hidden="true")
+    .modal-dialog
+      .modal-content(style="background: var(--industrial-gray); border: 1px solid var(--border-silver); border-radius: 12px; overflow: hidden;")
+        .modal-header(style="background: #000; border-bottom: 3px solid var(--accent-red); padding: 1.2rem 1.5rem;")
+          h5.modal-title(style="color: var(--clean-white); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;") Nueva Reserva
+          button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close")
+        .modal-body(style="padding: 1.8rem 1.5rem;")
+          form(action="/views/reservations" method="POST" style="display: flex; flex-direction: column; gap: 1.2rem;")
+            .input-group
+              label Seleccionar Coche
+              select(
+                name="id_car"
+                required
+                style="width: 100%; height: 50px; background: #1c1c1e; border: 1px solid var(--border-silver); border-radius: 8px; padding: 0 1.2rem; color: var(--clean-white); font-family: 'Montserrat', sans-serif; font-size: 0.9rem;"
+              )
+                option(value="" disabled selected) Elija un coche...
+                if cars
+                  each car in cars
+                    option(value=car.id_car)= `${car.brand} ${car.model} (${car.license_plate})`
+            .input-group
+              label Fecha de Entrada
+              input(
+                type="date"
+                name="start_date"
+                required
+                style="width: 100%; height: 50px; background: #1c1c1e; border: 1px solid var(--border-silver); border-radius: 8px; padding: 0 1.2rem; color: var(--clean-white); font-family: 'Montserrat', sans-serif; font-size: 0.9rem;"
+              )
+            .input-group
+              label Notas
+              textarea(
+                name="description"
+                rows="3"
+                style="width: 100%; background: #1c1c1e; border: 1px solid var(--border-silver); border-radius: 8px; padding: 0.8rem 1.2rem; color: var(--clean-white); font-family: 'Montserrat', sans-serif; font-size: 0.9rem; resize: vertical;"
+              )
+            .modal-footer(style="padding: 1rem 0 0; border-top: 1px solid var(--border-silver); display: flex; justify-content: flex-end; gap: 0.8rem;")
+              button.btn-outline(
+                type="button"
+                data-bs-dismiss="modal"
+                style="border: none; cursor: pointer; padding: 0.7rem 1.5rem;"
+              ) Cancelar
+              button.btn-premium(
+                type="submit"
+                style="border: none; cursor: pointer; padding: 0.7rem 1.5rem;"
+              ) Crear Reserva

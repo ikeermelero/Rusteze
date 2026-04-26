@@ -2,9 +2,12 @@ import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import { userModel } from '../models/index.js'
 
-
 const getUserByEmail = async (email) => {
+<<<<<<< HEAD
     return await userModel.findOne({ where: { email: email } }); 
+=======
+    return await userModel.findOne({ where: { email } }); 
+>>>>>>> feature-auth
 };
 
 async function login(email, password) {
@@ -24,7 +27,11 @@ async function login(email, password) {
 async function register(userData) {
     const { name, surname, email, password_hash, phone } = userData
     try {
+       
+        const hashedPassword = await bcrypt.hash(password, 10);
+
         const userCreated = await userModel.create({
+<<<<<<< HEAD
             name, surname, email, password_hash, phone,
             id_role: 1,
             id_taller: 1
@@ -48,4 +55,26 @@ export default {
     login,
     register,
     createToken,
+=======
+            name,
+            surname,
+            email,
+            password_hash: hashedPassword, 
+            phone,
+            id_role: 2,    
+            id_taller: 1 
+        });        
+        return userCreated;
+        
+    } catch (error) {
+        console.error("Error al crear usuario:", error);
+        throw new Error("Error al registrarse. Posible email duplicado.");
+    }
+}
+
+export default {
+    getUserByEmail,
+    login,
+    register
+>>>>>>> feature-auth
 };
