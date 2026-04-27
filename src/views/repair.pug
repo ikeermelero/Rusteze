@@ -1,4 +1,4 @@
-extends layout
+extends dashboard/layout-dashboard
 
 block content
   main
@@ -35,7 +35,7 @@ block content
                       span.td-plate= r.Car.plate
                     td= `${r.Car.User.name} ${r.Car.User.surname}`
                     td
-                      a.btn-premium(href=`/repairs${r.id_repair}` style="padding: 0.4rem 1rem; font-size: 0.75rem;") Ver detalle
+                      a.btn-premium(href=`/repairs/${r.id_repair}` style="padding: 0.4rem 1rem; font-size: 0.75rem;") Ver detalle
         else
           .empty-state
             p.empty-text No hay reparaciones registradas aún.

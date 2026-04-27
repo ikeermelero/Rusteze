@@ -1,4 +1,4 @@
-extends layout
+extends dashboard/layout-dashboard
 
 block content
   main
@@ -45,12 +45,9 @@ block content
                       - var isConfirmed = res.status === 'CONFIRMED' || res.status === 'CONFIRMADA'
                       span.status-badge(class=isConfirmed ? 'status-completed' : 'status-active')= res.status
                     td(style="display: flex; gap: 0.5rem; align-items: center;")
-                      button.btn-outline(
-                        title="Editar"
-                        style="padding: 0.3rem 0.8rem; font-size: 0.72rem; border-color: rgba(255,255,255,0.3);"
-                      ) ✏️ Editar
+                      
                       form(
-                        action=`/views/reservations/delete/${res.id_reservation}`
+                        action=`/reservations/delete/${res.id_reservation}`
                         method="POST"
                         onsubmit="return confirm('¿Estás seguro de eliminar esta reserva?')"
                       )
@@ -71,7 +68,7 @@ block content
           h5.modal-title(style="color: var(--clean-white); font-weight: 800; text-transform: uppercase; letter-spacing: 1px; margin: 0;") Nueva Reserva
           button.btn-close.btn-close-white(type="button" data-bs-dismiss="modal" aria-label="Close")
         .modal-body(style="padding: 1.8rem 1.5rem;")
-          form(action="/views/reservations" method="POST" style="display: flex; flex-direction: column; gap: 1.2rem;")
+          form(action="/reservations" method="POST" style="display: flex; flex-direction: column; gap: 1.2rem;")
             .input-group
               label Seleccionar Coche
               select(
